@@ -2,12 +2,46 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import MyLink from '../components/Link';
+import axios from 'axios';
 
 export default function Register() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (
+			username === '' ||
+			email === '' ||
+			password === '' ||
+			confirmPassword === ''
+		) {
+			alert('Please fill all the fields');
+			return;
+		} else if (confirmPassword !== password) {
+			alert('Password does not match');
+			return;
+		}
+		await axios
+			.post('/api/users', {
+				name: username,
+				email: email,
+				password: password,
+			})
+			.then((res) => {
+				console.log(res);
+				if (res.data.status === 'success') {
+					window.location.href = '/';
+				} else {
+					alert('Register failed');
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	return (
 		<>
@@ -73,7 +107,9 @@ export default function Register() {
 						</div>
 					</form>
 					<div className='w-100 text-center'>
-						<button className='btn btn-danger px-5 mt-4 mb-2'>
+						<button
+							className='btn btn-danger px-5 mt-4 mb-2'
+							onClick={handleSubmit}>
 							Register
 						</button>
 						<p className='text-muted'>
