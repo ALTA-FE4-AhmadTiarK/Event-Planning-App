@@ -7,7 +7,7 @@ export default function Navbar() {
 			className='navbar navbar-expand-lg'
 			style={{ backgroundColor: '#212840' }}>
 			<div className='container justify-content-between d-flex'>
-				<h3 className='text-white navbar-brand fw-bold'>
+				<h3 className='text-white navbar-brand fw-bold m-0'>
 					Event Planner
 				</h3>
 				<form className='d-flex flex-wrap input-group mx-md-3 mx-lg-5'>
