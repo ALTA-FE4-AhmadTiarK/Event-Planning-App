@@ -1,7 +1,37 @@
+import React, { useState } from 'react';
 import Head from 'next/head';
 import MyLink from '../components/Link';
+import axios from 'axios';
 
 export default function Login() {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (email === '' || password === '') {
+			alert('Please fill all the fields');
+			return;
+		}
+
+		await axios
+			.post('/api/auth', {
+				email: email,
+				password: password,
+			})
+			.then((res) => {
+				console.log(res);
+				if (res.data.status === 'success') {
+					window.location.href = '/';
+				} else {
+					alert('Login failed');
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	return (
 		<>
 			<Head>
@@ -27,6 +57,8 @@ export default function Login() {
 							<input
 								type='email'
 								className='form-control'
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
 								placeholder='Input your email'
 							/>
 						</div>
@@ -37,10 +69,14 @@ export default function Login() {
 							<input
 								type='password'
 								className='form-control'
+								value={password}
+								onChange={(e) => setPassword(e.target.value)}
 								placeholder='Input your password'
 							/>
 						</div>
-						<button className='btn btn-danger px-5 mt-4 mb-2'>
+						<button
+							className='btn btn-danger px-5 mt-4 mb-2'
+							onClick={handleSubmit}>
 							Login
 						</button>
 						<p className='text-muted'>
