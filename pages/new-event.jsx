@@ -78,7 +78,7 @@ export default function CreateEvent() {
 									Hosted by: (username)
 								</p>
 							</div>
-							<div className='col-4'>
+							<div className='col-lg-4'>
 								<select
 									name=''
 									id='category'
@@ -98,7 +98,7 @@ export default function CreateEvent() {
 
 						{/* second row */}
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-5 mx-auto'>
+							<div className='col-lg-5 mx-auto'>
 								<div className='input-group'>
 									<input
 										type='image'
@@ -125,7 +125,7 @@ export default function CreateEvent() {
 									/>
 								</div>
 							</div>
-							<div className='col-5 mx-auto'>
+							<div className='col-lg-5 mx-auto'>
 								<button
 									className='btn btn-danger text-uppercase my-3 w-100'
 									type='submit'
@@ -180,7 +180,7 @@ export default function CreateEvent() {
 							<h5 className='mt-5 pb-2 border-bottom border-dark border-3'>
 								Detail Event :
 							</h5>
-							<div className='col-12'>
+							<div className='col-lg-12'>
 								<div className='py-3'>
 									<textarea
 										className='form-control'
@@ -198,12 +198,12 @@ export default function CreateEvent() {
 						{/* fourth row */}
 						<div className='my-5'>
 							<div className='row border-bottom border-dark border-3'>
-								<div className='col-3'>
+								<div className='col-lg-3 align-self-end'>
 									<h5 className='my-2'>
 										Limit the Attendees :
 									</h5>
 								</div>
-								<div className='col-3'>
+								<div className='col-lg-3 mb-2'>
 									<input
 										type='number'
 										className='form-control'
@@ -215,7 +215,7 @@ export default function CreateEvent() {
 									/>
 								</div>
 							</div>
-							<div className='col-12'>
+							<div className='col-lg-12'>
 								{/* Mapping the attendees */}
 							</div>
 						</div>
