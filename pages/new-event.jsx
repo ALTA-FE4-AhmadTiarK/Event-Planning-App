@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
-	const [category, setCategory] = useState('');
+	const [category, setCategory] = useState([]);
 	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
 	const [eventTime, setEventTime] = useState('');
@@ -14,6 +14,20 @@ export default function CreateEvent() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		if (
+			eventName &&
+			category &&
+			eventImage &&
+			eventDate &&
+			eventTime &&
+			eventLocation &&
+			eventDescription &&
+			limitAttendee
+		) {
+			console.log('Form Submitted');
+		} else {
+			alert('Please fill all the fields');
+		}
 		console.log(
 			eventName,
 			category,
@@ -24,6 +38,13 @@ export default function CreateEvent() {
 			eventDescription,
 			limitAttendee
 		);
+		setEventName('');
+		setCategory([]);
+		setEventDate('');
+		setEventTime('');
+		setEventLocation('');
+		setEventDescription('');
+		setLimitAttendee(8);
 	};
 
 	return (
@@ -61,6 +82,7 @@ export default function CreateEvent() {
 								<select
 									name=''
 									id='category'
+									onClick={(e) => setCategory(e.target.value)}
 									className='form-select'>
 									<option value='games'>Games</option>
 									<option value='movie'>Movie</option>
@@ -80,7 +102,13 @@ export default function CreateEvent() {
 								<div className='input-group'>
 									<input
 										type='image'
-										src='/BigThumbnail.svg'
+										src={
+											eventImage.length !== 0
+												? URL.createObjectURL(
+														eventImage
+												  )
+												: '/BigThumbnail.svg'
+										}
 										alt='event-image'
 										width={450}
 										height={300}
@@ -91,7 +119,9 @@ export default function CreateEvent() {
 										type='file'
 										className='form-control justify-content-center'
 										accept='image/*'
-										// value={eventImage}
+										onChange={(e) =>
+											setEventImage(e.target.files[0])
+										}
 									/>
 								</div>
 							</div>
