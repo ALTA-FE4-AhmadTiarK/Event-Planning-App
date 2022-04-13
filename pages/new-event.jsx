@@ -4,7 +4,7 @@ import Layout from '../components/Layout';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
-	const [category, setCategory] = useState('');
+	const [category, setCategory] = useState([]);
 	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
 	const [eventTime, setEventTime] = useState('');
@@ -14,6 +14,20 @@ export default function CreateEvent() {
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
+		if (
+			eventName &&
+			category &&
+			eventImage &&
+			eventDate &&
+			eventTime &&
+			eventLocation &&
+			eventDescription &&
+			limitAttendee
+		) {
+			console.log('Form Submitted');
+		} else {
+			alert('Please fill all the fields');
+		}
 		console.log(
 			eventName,
 			category,
@@ -24,6 +38,13 @@ export default function CreateEvent() {
 			eventDescription,
 			limitAttendee
 		);
+		setEventName('');
+		setCategory([]);
+		setEventDate('');
+		setEventTime('');
+		setEventLocation('');
+		setEventDescription('');
+		setLimitAttendee(8);
 	};
 
 	return (
@@ -57,10 +78,11 @@ export default function CreateEvent() {
 									Hosted by: (username)
 								</p>
 							</div>
-							<div className='col-4'>
+							<div className='col-lg-4'>
 								<select
 									name=''
 									id='category'
+									onClick={(e) => setCategory(e.target.value)}
 									className='form-select'>
 									<option value='games'>Games</option>
 									<option value='movie'>Movie</option>
@@ -76,11 +98,17 @@ export default function CreateEvent() {
 
 						{/* second row */}
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-5 mx-auto'>
+							<div className='col-lg-5 mx-auto'>
 								<div className='input-group'>
 									<input
 										type='image'
-										src='/BigThumbnail.svg'
+										src={
+											eventImage.length !== 0
+												? URL.createObjectURL(
+														eventImage
+												  )
+												: '/BigThumbnail.svg'
+										}
 										alt='event-image'
 										width={450}
 										height={300}
@@ -91,11 +119,13 @@ export default function CreateEvent() {
 										type='file'
 										className='form-control justify-content-center'
 										accept='image/*'
-										// value={eventImage}
+										onChange={(e) =>
+											setEventImage(e.target.files[0])
+										}
 									/>
 								</div>
 							</div>
-							<div className='col-5 mx-auto'>
+							<div className='col-lg-5 mx-auto'>
 								<button
 									className='btn btn-danger text-uppercase my-3 w-100'
 									type='submit'
@@ -150,7 +180,7 @@ export default function CreateEvent() {
 							<h5 className='mt-5 pb-2 border-bottom border-dark border-3'>
 								Detail Event :
 							</h5>
-							<div className='col-12'>
+							<div className='col-lg-12'>
 								<div className='py-3'>
 									<textarea
 										className='form-control'
@@ -168,12 +198,12 @@ export default function CreateEvent() {
 						{/* fourth row */}
 						<div className='my-5'>
 							<div className='row border-bottom border-dark border-3'>
-								<div className='col-3'>
+								<div className='col-lg-3 align-self-end'>
 									<h5 className='my-2'>
 										Limit the Attendees :
 									</h5>
 								</div>
-								<div className='col-3'>
+								<div className='col-lg-3 mb-2'>
 									<input
 										type='number'
 										className='form-control'
@@ -185,7 +215,7 @@ export default function CreateEvent() {
 									/>
 								</div>
 							</div>
-							<div className='col-12'>
+							<div className='col-lg-12'>
 								{/* Mapping the attendees */}
 							</div>
 						</div>

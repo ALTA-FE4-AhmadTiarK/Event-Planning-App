@@ -25,7 +25,7 @@ export default function Register() {
 			return;
 		}
 		await axios
-			.post('/api/users', {
+			.post('https://haudhi.site/users', {
 				name: username,
 				email: email,
 				password: password,
