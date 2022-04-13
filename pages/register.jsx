@@ -3,12 +3,14 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import MyLink from '../components/Link';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function Register() {
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
+	const router = useRouter();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -19,6 +21,9 @@ export default function Register() {
 			confirmPassword === ''
 		) {
 			alert('Please fill all the fields');
+			return;
+		} else if (password.length < 8) {
+			alert('Password must be at least 8 characters');
 			return;
 		} else if (confirmPassword !== password) {
 			alert('Password does not match');
@@ -31,11 +36,9 @@ export default function Register() {
 				password: password,
 			})
 			.then((res) => {
-				console.log(res);
+				alert(res.data.message);
 				if (res.data.status === 'success') {
-					window.location.href = '/';
-				} else {
-					alert('Register failed');
+					router.push('/login');
 				}
 			})
 			.catch((err) => {
@@ -123,12 +126,4 @@ export default function Register() {
 			</Layout>
 		</>
 	);
-}
-
-export async function getServerSideProps() {
-	return {
-		props: {
-			data: null,
-		},
-	};
 }

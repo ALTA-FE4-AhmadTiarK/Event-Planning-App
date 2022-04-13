@@ -207,7 +207,6 @@ export default function CreateEvent() {
 									<input
 										type='number'
 										className='form-control'
-										id=''
 										value={limitAttendee}
 										onChange={(e) =>
 											setLimitAttendee(e.target.value)
