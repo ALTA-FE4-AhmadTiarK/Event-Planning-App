@@ -15,7 +15,7 @@ export default function Login() {
 		}
 
 		await axios
-			.post('/api/auth', {
+			.post('https://haudhi.site/auth', {
 				email: email,
 				password: password,
 			})
