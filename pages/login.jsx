@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import Head from 'next/head';
 import MyLink from '../components/Link';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const router = useRouter();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -20,11 +22,9 @@ export default function Login() {
 				password: password,
 			})
 			.then((res) => {
-				console.log(res);
+				alert(res.data.message);
 				if (res.data.status === 'success') {
-					window.location.href = '/';
-				} else {
-					alert('Login failed');
+					router.push('/userprofile');
 				}
 			})
 			.catch((err) => {
@@ -80,7 +80,7 @@ export default function Login() {
 							Login
 						</button>
 						<p className='text-muted'>
-							Does not have an account?{' '}
+							Doesn`t have an account?{' '}
 							<MyLink href='/register' className='link-danger'>
 								Register
 							</MyLink>
@@ -90,12 +90,4 @@ export default function Login() {
 			</div>
 		</>
 	);
-}
-
-export async function getServerSideProps() {
-	return {
-		props: {
-			data: null,
-		},
-	};
 }
