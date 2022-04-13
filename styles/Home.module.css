@@ -108,6 +108,47 @@
   margin-left: 0.5rem;
 }
 
+.category ul {
+  margin-top: 10vh;
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  border: 1px solid #000;
+  border-radius: 25px;
+  padding: 0rem;
+}
+
+.category ul li {
+  padding: 6px 25px;
+}
+
+.textEventList {
+  margin-top: 3rem;
+}
+
+.user {
+  margin-top: 100px;
+}
+
+.interestContainer {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 165px;
+}
+
+.interestBox {
+  border-radius: 25px;
+  border: 1px solid #000;
+  padding: 13px 0;
+  width: 130px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  margin-left: 15px;
+}
+
+
+
 @media (max-width: 600px) {
   .grid {
     width: 100%;
