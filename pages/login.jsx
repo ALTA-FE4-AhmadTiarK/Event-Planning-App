@@ -22,9 +22,13 @@ export default function Login() {
 				password: password,
 			})
 			.then((res) => {
+				let token = res.data.data.token;
 				alert(res.data.message);
-				if (res.data.status === 'success') {
-					router.push('/userprofile');
+				if (token) {
+					localStorage.setItem('token', token);
+					if (res.data.status === 'success') {
+						router.push('/userprofile');
+					}
 				}
 			})
 			.catch((err) => {
