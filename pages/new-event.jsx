@@ -1,16 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Layout from '../components/Layout';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
 	const [category, setCategory] = useState([]);
-	const [eventImage, setEventImage] = useState('');
+	const [eventImage, setEventImage] = useState([]);
 	const [eventDate, setEventDate] = useState('');
-	const [eventTime, setEventTime] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
 	const [limitAttendee, setLimitAttendee] = useState(8);
+	const [username, setUsername] = useState('');
+	const router = useRouter();
+
+	useEffect(() => {
+		fetchUser();
+	}, []);
+
+	const fetchUser = async () => {
+		await axios
+			.get('https://haudhi.site/users', {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				},
+			})
+			.then((res) => {
+				setUsername(res.data.data.name);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	const handleSubmit = (e) => {
 		e.preventDefault();
@@ -19,32 +41,41 @@ export default function CreateEvent() {
 			category &&
 			eventImage &&
 			eventDate &&
-			eventTime &&
 			eventLocation &&
 			eventDescription &&
 			limitAttendee
 		) {
 			console.log('Form Submitted');
+			setEventName('');
+			setCategory([]);
+			setEventDate('');
+			setEventImage([]);
+			setEventLocation('');
+			setEventDescription('');
+			setLimitAttendee(8);
+			const event = {
+				eventName: eventName,
+				category: category,
+				eventImage: eventImage,
+				eventDate: eventDate,
+				eventLocation: eventLocation,
+				eventDescription: eventDescription,
+				limitAttendee: limitAttendee,
+			};
+			let getLocal = JSON.parse(localStorage.getItem('event-list'));
+			if (getLocal === null) {
+				let localEvent = [];
+				localEvent.push(event);
+				localStorage.setItem('event-list', JSON.stringify(localEvent));
+			} else {
+				getLocal.push(event);
+				localStorage.setItem('event-list', JSON.stringify(getLocal));
+			}
+			alert('Event created successfully');
+			router.push('/new-event');
 		} else {
 			alert('Please fill all the fields');
 		}
-		console.log(
-			eventName,
-			category,
-			eventImage,
-			eventDate,
-			eventTime,
-			eventLocation,
-			eventDescription,
-			limitAttendee
-		);
-		setEventName('');
-		setCategory([]);
-		setEventDate('');
-		setEventTime('');
-		setEventLocation('');
-		setEventDescription('');
-		setLimitAttendee(8);
 	};
 
 	return (
@@ -59,7 +90,7 @@ export default function CreateEvent() {
 				<main>
 					<div className='container'>
 						{/* first row */}
-						<div className='row border-bottom border-3 border-dark mt-5'>
+						<div className='row border-bottom border-3 border-dark mt-5 my-1'>
 							<div className='col-lg-8'>
 								<div className='input-group'>
 									<input
@@ -75,7 +106,7 @@ export default function CreateEvent() {
 									/>
 								</div>
 								<p className='text-muted ms-3 mb-1'>
-									Hosted by: (username)
+									Hosted by : {username}
 								</p>
 							</div>
 							<div className='col-lg-4'>
@@ -84,6 +115,9 @@ export default function CreateEvent() {
 									id='category'
 									onClick={(e) => setCategory(e.target.value)}
 									className='form-select'>
+									<option defaultValue='Choose Category'>
+										Choose a category
+									</option>
 									<option value='games'>Games</option>
 									<option value='movie'>Movie</option>
 									<option value='sport'>Sport</option>
@@ -98,8 +132,8 @@ export default function CreateEvent() {
 
 						{/* second row */}
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-lg-5 mx-auto'>
-								<div className='input-group'>
+							<div className='col-lg-5 mx-auto my-2'>
+								<div className='input-group justify-content-center'>
 									<input
 										type='image'
 										src={
@@ -125,40 +159,32 @@ export default function CreateEvent() {
 									/>
 								</div>
 							</div>
-							<div className='col-lg-5 mx-auto'>
-								<button
-									className='btn btn-danger text-uppercase my-3 w-100'
-									type='submit'
-									onClick={handleSubmit}>
-									create event
-								</button>
+							<div className='col-lg-5 mx-auto my-auto'>
+								<div className='justify-content-between d-flex'>
+									<button
+										className='btn btn-dark px-5 text-uppercase mb-2'
+										type='submit'
+										onClick={handleSubmit}>
+										Create Event
+									</button>
+									<button
+										className='btn btn-danger px-5 text-uppercase mb-2'
+										onClick={() => router.push('/')}>
+										Cancel Event
+									</button>
+								</div>
 								<h5 className='mt-3'>Information :</h5>
 								<div className='border p-3'>
 									<p>Pick a date and time for your event.</p>
 									<div className='input-group my-2'>
 										<input
-											className='form-control'
-											type='date'
-											name=''
+											type='datetime-local'
 											id='event-date'
+											className='form-control'
 											value={eventDate}
 											onChange={(e) =>
 												setEventDate(e.target.value)
 											}
-											placeholder='Event Date'
-										/>
-									</div>
-									<div className='input-group my-2'>
-										<input
-											className='form-control'
-											type='time'
-											name=''
-											id='event-time'
-											value={eventTime}
-											onChange={(e) =>
-												setEventTime(e.target.value)
-											}
-											placeholder='Event Time'
 										/>
 									</div>
 									<input
@@ -197,11 +223,9 @@ export default function CreateEvent() {
 
 						{/* fourth row */}
 						<div className='my-5'>
-							<div className='row border-bottom border-dark border-3'>
+							<div className='row border-bottom border-dark border-3 py-lg-1'>
 								<div className='col-lg-3 align-self-end'>
-									<h5 className='my-2'>
-										Limit the Attendees :
-									</h5>
+									<h5 className=''>Limit the Attendees :</h5>
 								</div>
 								<div className='col-lg-3 mb-2'>
 									<input
