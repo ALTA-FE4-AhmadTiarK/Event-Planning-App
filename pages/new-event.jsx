@@ -7,13 +7,36 @@ import { useRouter } from 'next/router';
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
 	const [category, setCategory] = useState([]);
-	const [eventImage, setEventImage] = useState([]);
+	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
-	const [limitAttendee, setLimitAttendee] = useState(8);
+	const [quota, setQuota] = useState(80);
 	const [username, setUsername] = useState('');
 	const router = useRouter();
+
+	// convert Image to base64
+	const uploadImage = async (e) => {
+		const file = e.target.files[0];
+		const base64 = await convertBase64(file);
+		setEventImage(base64);
+	};
+
+	const convertBase64 = (file) => {
+		return new Promise((resolve, reject) => {
+			const fileReader = new FileReader();
+			fileReader.readAsDataURL(file);
+
+			fileReader.onload = () => {
+				resolve(fileReader.result);
+			};
+
+			fileReader.onerror = (error) => {
+				reject(error);
+			};
+		});
+	};
+	// end convert
 
 	useEffect(() => {
 		fetchUser();
@@ -43,25 +66,27 @@ export default function CreateEvent() {
 			eventDate &&
 			eventLocation &&
 			eventDescription &&
-			limitAttendee
+			quota
 		) {
 			console.log('Form Submitted');
 			setEventName('');
 			setCategory([]);
 			setEventDate('');
-			setEventImage([]);
+			setEventImage('');
 			setEventLocation('');
 			setEventDescription('');
-			setLimitAttendee(8);
+			setQuota(80);
 			const event = {
-				eventName: eventName,
-				category: category,
-				eventImage: eventImage,
-				eventDate: eventDate,
-				eventLocation: eventLocation,
-				eventDescription: eventDescription,
-				limitAttendee: limitAttendee,
+				name: eventName,
+				category_id: category,
+				host: username,
+				image: eventImage,
+				date: eventDate,
+				location: eventLocation,
+				details: eventDescription,
+				quota: quota,
 			};
+			console.log(event);
 			let getLocal = JSON.parse(localStorage.getItem('event-list'));
 			if (getLocal === null) {
 				let localEvent = [];
@@ -115,17 +140,17 @@ export default function CreateEvent() {
 									id='category'
 									onClick={(e) => setCategory(e.target.value)}
 									className='form-select'>
-									<option defaultValue='Choose Category'>
+									<option defaultValue={0}>
 										Choose a category
 									</option>
-									<option value='games'>Games</option>
-									<option value='movie'>Movie</option>
-									<option value='sport'>Sport</option>
-									<option value='food'>Food</option>
-									<option value='party'>Party</option>
-									<option value='art'>Art</option>
-									<option value='education'>Education</option>
-									<option value='music'>Music</option>
+									<option value={1}>Games</option>
+									<option value={2}>Movie</option>
+									<option value={3}>Sport</option>
+									<option value={4}>Food</option>
+									<option value={5}>Party</option>
+									<option value={6}>Art</option>
+									<option value={7}>Education</option>
+									<option value={8}>Music</option>
 								</select>
 							</div>
 						</div>
@@ -136,16 +161,11 @@ export default function CreateEvent() {
 								<div className='input-group justify-content-center'>
 									<input
 										type='image'
-										src={
-											eventImage.length !== 0
-												? URL.createObjectURL(
-														eventImage
-												  )
-												: '/BigThumbnail.svg'
-										}
-										alt='event-image'
+										src={eventImage}
+										alt=' '
 										width={450}
 										height={300}
+										className='text-center align-items-center border border-2'
 									/>
 								</div>
 								<div className='input-group'>
@@ -153,9 +173,7 @@ export default function CreateEvent() {
 										type='file'
 										className='form-control justify-content-center'
 										accept='image/*'
-										onChange={(e) =>
-											setEventImage(e.target.files[0])
-										}
+										onChange={uploadImage}
 									/>
 								</div>
 							</div>
@@ -231,15 +249,12 @@ export default function CreateEvent() {
 									<input
 										type='number'
 										className='form-control'
-										value={limitAttendee}
+										value={quota}
 										onChange={(e) =>
-											setLimitAttendee(e.target.value)
+											setQuota(e.target.value)
 										}
 									/>
 								</div>
-							</div>
-							<div className='col-lg-12'>
-								{/* Mapping the attendees */}
 							</div>
 						</div>
 					</div>
