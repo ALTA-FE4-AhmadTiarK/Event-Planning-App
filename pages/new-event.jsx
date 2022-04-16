@@ -56,19 +56,11 @@ export default function CreateEvent() {
 			quota &&
 			eventImage
 		) {
-			setCategory([]);
-			setEventName('');
-			setEventDate('');
-			setEventLocation('');
-			setEventDescription('');
-			setQuota(80);
-			setEventImage('');
-
 			const formData = new FormData();
 			formData.append('category_id', category);
 			formData.append('name', eventName);
 			formData.append('host', username);
-			formData.append('date', eventDate + ':00Z');
+			formData.append('date', eventDate);
 			formData.append('location', eventLocation);
 			formData.append('details', eventDescription);
 			formData.append('quota', quota);
@@ -87,6 +79,15 @@ export default function CreateEvent() {
 					console.log(res);
 					alert(res.data.message);
 					router.push('/new-event');
+				})
+				.then(() => {
+					setCategory([]);
+					setEventName('');
+					setEventDate('');
+					setEventLocation('');
+					setEventDescription('');
+					setQuota(80);
+					setEventImage('');
 				})
 				.catch((err) => {
 					console.log(err);
@@ -138,13 +139,11 @@ export default function CreateEvent() {
 										Choose a category
 									</option>
 									<option value={1}>Games</option>
-									<option value={2}>Education</option>
+									<option value={2}>Art</option>
 									<option value={3}>Sport</option>
-									<option value={4}>Food</option>
-									<option value={5}>Party</option>
-									<option value={6}>Movie</option>
-									<option value={7}>Music</option>
-									<option value={8}>Art</option>
+									<option value={4}>Technology</option>
+									<option value={5}>Music</option>
+									<option value={6}>Education</option>
 								</select>
 							</div>
 						</div>
