@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
-	const [category, setCategory] = useState([]);
+	const [category, setCategory] = useState(2);
 	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
@@ -14,29 +15,9 @@ export default function CreateEvent() {
 	const [quota, setQuota] = useState(80);
 	const [username, setUsername] = useState('');
 	const router = useRouter();
+	const [participants, setParticipants] = useState(0);
 
-	// convert Image to base64
-	const uploadImage = async (e) => {
-		const file = e.target.files[0];
-		const base64 = await convertBase64(file);
-		setEventImage(base64);
-	};
-
-	const convertBase64 = (file) => {
-		return new Promise((resolve, reject) => {
-			const fileReader = new FileReader();
-			fileReader.readAsDataURL(file);
-
-			fileReader.onload = () => {
-				resolve(fileReader.result);
-			};
-
-			fileReader.onerror = (error) => {
-				reject(error);
-			};
-		});
-	};
-	// end convert
+	const [imagePreview, setImagePreview] = useState(null);
 
 	useEffect(() => {
 		fetchUser();
@@ -57,47 +38,60 @@ export default function CreateEvent() {
 			});
 	};
 
-	const handleSubmit = (e) => {
+	const onImageUpload = (e) => {
+		const file = e.target.files[0];
+		setEventImage(file);
+
+		setImagePreview(URL.createObjectURL(file));
+	};
+
+	const onSubmit = (e) => {
 		e.preventDefault();
 		if (
-			eventName &&
 			category &&
-			eventImage &&
+			eventName &&
 			eventDate &&
 			eventLocation &&
 			eventDescription &&
-			quota
+			quota &&
+			eventImage
 		) {
-			console.log('Form Submitted');
-			setEventName('');
 			setCategory([]);
+			setEventName('');
 			setEventDate('');
-			setEventImage('');
 			setEventLocation('');
 			setEventDescription('');
 			setQuota(80);
-			const event = {
-				name: eventName,
-				category_id: category,
-				host: username,
-				image: eventImage,
-				date: eventDate,
-				location: eventLocation,
-				details: eventDescription,
-				quota: quota,
-			};
-			console.log(event);
-			let getLocal = JSON.parse(localStorage.getItem('event-list'));
-			if (getLocal === null) {
-				let localEvent = [];
-				localEvent.push(event);
-				localStorage.setItem('event-list', JSON.stringify(localEvent));
-			} else {
-				getLocal.push(event);
-				localStorage.setItem('event-list', JSON.stringify(getLocal));
-			}
-			alert('Event created successfully');
-			router.push('/new-event');
+			setEventImage('');
+
+			const formData = new FormData();
+			formData.append('category_id', category);
+			formData.append('name', eventName);
+			formData.append('host', username);
+			formData.append('date', eventDate + ':00Z');
+			formData.append('location', eventLocation);
+			formData.append('details', eventDescription);
+			formData.append('quota', quota);
+			formData.append('participants', participants);
+			formData.append('image', eventImage);
+
+			axios
+				.post('https://haudhi.site/event', formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization:
+							'Bearer ' + localStorage.getItem('token'),
+					},
+				})
+				.then((res) => {
+					console.log(res);
+					alert(res.data.message);
+					router.push('/new-event');
+				})
+				.catch((err) => {
+					console.log(err);
+					alert(err.response.data.message);
+				});
 		} else {
 			alert('Please fill all the fields');
 		}
@@ -144,13 +138,13 @@ export default function CreateEvent() {
 										Choose a category
 									</option>
 									<option value={1}>Games</option>
-									<option value={2}>Movie</option>
+									<option value={2}>Education</option>
 									<option value={3}>Sport</option>
 									<option value={4}>Food</option>
 									<option value={5}>Party</option>
-									<option value={6}>Art</option>
-									<option value={7}>Education</option>
-									<option value={8}>Music</option>
+									<option value={6}>Movie</option>
+									<option value={7}>Music</option>
+									<option value={8}>Art</option>
 								</select>
 							</div>
 						</div>
@@ -158,31 +152,17 @@ export default function CreateEvent() {
 						{/* second row */}
 						<div className='row mt-4 justify-content-between'>
 							<div className='col-lg-5 mx-auto my-2'>
-								<div className='input-group justify-content-center'>
-									<input
-										type='image'
-										src={eventImage}
-										alt=' '
-										width={450}
-										height={300}
-										className='text-center align-items-center border border-2'
-									/>
-								</div>
-								<div className='input-group'>
-									<input
-										type='file'
-										className='form-control justify-content-center'
-										accept='image/*'
-										onChange={uploadImage}
-									/>
-								</div>
+								<Upload
+									img={imagePreview}
+									onChange={(e) => onImageUpload(e)}
+								/>
 							</div>
 							<div className='col-lg-5 mx-auto my-auto'>
 								<div className='justify-content-between d-flex'>
 									<button
 										className='btn btn-dark px-5 text-uppercase mb-2'
 										type='submit'
-										onClick={handleSubmit}>
+										onClick={onSubmit}>
 										Create Event
 									</button>
 									<button
@@ -263,3 +243,26 @@ export default function CreateEvent() {
 		</>
 	);
 }
+
+// v2
+const Upload = ({ img, ...rest }) => {
+	return (
+		<div className='input-group'>
+			{img && (
+				<Image
+					className=''
+					src={img}
+					alt='preview'
+					width={450}
+					height={300}
+				/>
+			)}
+			<input
+				className='form-control justify-content-center'
+				type='file'
+				accept='image/*'
+				{...rest}
+			/>
+		</div>
+	);
+};
