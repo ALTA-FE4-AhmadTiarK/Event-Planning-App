@@ -19,16 +19,24 @@ export default function EventDetail() {
 
 
 	useEffect(() => {
+		if (!router.isReady) return;
 		fetchEvent();
-	}, []);
+	}, [router.isReady]);
 
 	const fetchEvent = async () => {
 		const { eventID } = router.query;
-		console.log(router);
 		await axios
 			.get(`https://haudhi.site/event/${eventID}`)
 			.then((res) => {
-				console.log(res);
+				console.log(res.data.data);
+				const event = res.data.data;
+				setEventName(event.name);
+				setUsername(event.host);
+				setEventLocation(event.location);
+				setEventDate(event.date);
+				setEventDescription(event.description);
+				// setEventImage(event.image);
+				setQuota(event.quota);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -48,12 +56,9 @@ export default function EventDetail() {
 						{/* First row */}
 						<div className='row border-bottom border-3 border-dark mt-5'>
 							<div className='col-lg-12'>
-								<h2 className='fw-bold'>
-									(Event Name)
-									{eventName}
-								</h2>
+								<h2 className='fw-bold'>{eventName}</h2>
 								<h6 className='text-muted text-secondary'>
-									Hosted by (username) {username}
+									Hosted by {username}
 								</h6>
 							</div>
 						</div>
@@ -67,7 +72,6 @@ export default function EventDetail() {
 											? URL.createObjectURL(eventImage)
 											: '/BigThumbnail.svg'
 									}
-									// src={eventImage}
 									alt='Event thumbnail'
 									width={450}
 									height={300}
@@ -89,14 +93,10 @@ export default function EventDetail() {
 								<div
 									className='border border-3 p-5'
 									style={{ borderRadius: 1 + 'em' }}>
-									<h4 className=''>
-										Monday, November 15
-										{eventDate}
-									</h4>
+									<h4 className=''>{eventDate}</h4>
 									<br />
 									<h4 className=''>
-										Location : Jakarta
-										{eventLocation}
+										Location : {eventLocation}
 									</h4>
 								</div>
 							</div>
