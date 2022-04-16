@@ -3,61 +3,32 @@ import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import Image from 'next/image';
 import Layout from '../../components/Layout';
-
-const UserAttend = ({ src, username }) => {
-	return (
-		<>
-			<div className='col-lg-2 col-auto'>
-				<Image
-					src={src}
-					alt='User thumbnail'
-					className='rounded-circle'
-					width={200}
-					height={200}
-				/>
-				<h6 className='text-center'>{username}</h6>
-			</div>
-		</>
-	);
-};
-
-const joinButton = (e) => {
-	e.preventDefault();
-	console.log('Join Button Clicked');
-};
-
-const deleteButton = (e) => {
-	e.preventDefault();
-	console.log('Delete Button Clicked');
-};
+import { useRouter } from 'next/router';
 
 export default function EventDetail() {
+	const router = useRouter();
 	const [username, setUsername] = useState('');
 	const [eventName, setEventName] = useState('');
-	const [category, setCategory] = useState([]);
-	const [eventImage, setEventImage] = useState('');
+	const [category, setCategory] = useState(0);
 	const [eventDate, setEventDate] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
 	const [quota, setQuota] = useState(8);
+	const [eventImage, setEventImage] = useState('');
+	const [participants, setParticipants] = useState(0);
+
 
 	useEffect(() => {
 		fetchEvent();
 	}, []);
 
 	const fetchEvent = async () => {
+		const { eventID } = router.query;
+		console.log(router);
 		await axios
-			.get(`/api/events/${eventID}`)
+			.get(`https://haudhi.site/event/${eventID}`)
 			.then((res) => {
-				console.log(res.data);
-				setUsername(res.data.username);
-				setEventName(res.data.eventName);
-				setCategory(res.data.category);
-				setEventImage(res.data.eventImage);
-				setEventDate(res.data.eventDate);
-				setEventLocation(res.data.eventLocation);
-				setEventDescription(res.data.eventDescription);
-				setQuota(res.data.limitAttendee);
+				console.log(res);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -213,3 +184,31 @@ export default function EventDetail() {
 		</>
 	);
 }
+
+
+const UserAttend = ({ src, username }) => {
+	return (
+		<>
+			<div className='col-lg-2 col-auto'>
+				<Image
+					src={src}
+					alt='User thumbnail'
+					className='rounded-circle'
+					width={200}
+					height={200}
+				/>
+				<h6 className='text-center'>{username}</h6>
+			</div>
+		</>
+	);
+};
+
+const joinButton = (e) => {
+	e.preventDefault();
+	console.log('Join Button Clicked');
+};
+
+const deleteButton = (e) => {
+	e.preventDefault();
+	console.log('Delete Button Clicked');
+};
