@@ -1,10 +1,10 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
-import Layout from '../../components/Layout';
 import { useRouter } from 'next/router';
-
+import Layout from '../../components/Layout';
+import { EditButton } from '../../components/Button';
+import { UserAttend } from '../../components/Picture';
+import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 
@@ -18,9 +18,10 @@ export default function EventDetail() {
 	const [eventDescription, setEventDescription] = useState('');
 	const [quota, setQuota] = useState(8);
 	const [eventImage, setEventImage] = useState('');
-	const [participants, setParticipants] = useState(0);
+	const [participants, setParticipants] = useState([]);
 	const [eventId, setEventId] = useState(0);
 	const [comment, setComment] = useState('');
+	const [getComments, setGetComments] = useState([]);
 
 	useEffect(() => {
 		if (!router.isReady) return;
@@ -33,16 +34,17 @@ export default function EventDetail() {
 		await axios
 			.get(`https://haudhi.site/event/${eventID}`)
 			.then((res) => {
-				console.log(res.data.data);
 				const event = res.data.data;
 				setEventName(event.name);
 				setHost(event.host);
 				setEventLocation(event.location);
 				setEventDate(event.date);
-				setEventDescription(event.description);
-				// setEventImage(event.image);
+				setEventDescription(event.details);
+				setEventImage(event.image);
 				setQuota(event.quota);
-				setEventId(event.id);
+				setEventId(event.ID);
+				setParticipants(event.attendees);
+				setGetComments(event.comment);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -64,35 +66,71 @@ export default function EventDetail() {
 			});
 	};
 
-	// untuk GET comment secara async
-	// const getComment = async () => {
-	// 	await axios
-	// 		.get(`https://haudhi.site/event/${eventId}/comment`)
-	// 		.then((res) => {
-	// 			console.log(res.data.data);
-	// 			setParticipants(res.data.data.length);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 		});
-	// }
-
 	const joinButton = (e) => {
 		e.preventDefault();
+		if (participants.length <= quota) {
+			axios
+				.post(
+					`https://haudhi.site/event/participations`,
+					{ event_id: eventId },
+					{
+						headers: {
+							'Content-Type': 'application/json',
+							Authorization:
+								'Bearer ' + localStorage.getItem('token'),
+						},
+					}
+				)
+				.then((res) => {
+					console.log(res);
+					if (res.data.status === 'success') {
+						Swal.fire({
+							position: 'center',
+							icon: 'success',
+							title: res.data.message,
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					}
+					router.reload();
+				})
+				.catch((err) => {
+					Swal.fire({
+						position: 'center',
+						icon: 'error',
+						title: err.response.data.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
+				});
+		} else {
+			Swal.fire({
+				position: 'center',
+				icon: 'error',
+				title: 'Quota is full',
+				showConfirmButton: false,
+				timer: 1500,
+			});
+		}
+	};
+
+	const editButton = (e) => {
+		e.preventDefault();
+		const formData = new FormData();
+		formData.append('name', eventName);
+		formData.append('date', eventDate);
+		formData.append('location', eventLocation);
+		formData.append('details', eventDescription);
+		formData.append('quota', quota);
+
+		const { eventID } = router.query;
 		axios
-			.post(
-				`https://haudhi.site/event/participations`,
-				{
-					event_id: eventId,
+			.put(`https://haudhi.site/event/${eventID}`, formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
 				},
-				{
-					headers: {
-						'Content-Type': 'application/json',
-						Authorization:
-							'Bearer ' + localStorage.getItem('token'),
-					},
-				}
-			)
+			})
 			.then((res) => {
 				console.log(res);
 				if (res.data.status === 'success') {
@@ -135,7 +173,13 @@ export default function EventDetail() {
 					}
 				})
 				.catch((err) => {
-					console.log(err);
+					Swal.fire({
+						position: 'center',
+						icon: 'error',
+						title: err.response.data.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
 				});
 		} else {
 			Swal.fire({
@@ -153,7 +197,7 @@ export default function EventDetail() {
 			Swal.fire({
 				position: 'center',
 				icon: 'error',
-				title: 'You must be logged in to comment',
+				title: 'You must be logged in to make a comment',
 				showConfirmButton: false,
 				timer: 1500,
 			});
@@ -161,7 +205,7 @@ export default function EventDetail() {
 			Swal.fire({
 				position: 'center',
 				icon: 'error',
-				title: 'You must enter a comment',
+				title: 'Comment cannot be empty',
 				showConfirmButton: false,
 				timer: 1500,
 			});
@@ -193,10 +237,19 @@ export default function EventDetail() {
 							timer: 1500,
 						});
 					}
+					router.reload();
 				})
 				.catch((err) => {
 					console.log(err);
+					Swal.fire({
+						position: 'center',
+						icon: 'error',
+						title: err.response.data.message,
+						showConfirmButton: false,
+						timer: 1500,
+					});
 				});
+			setComment('');
 		}
 	};
 
@@ -221,28 +274,49 @@ export default function EventDetail() {
 						</div>
 
 						{/* Second row */}
-						<div className='row mt-4'>
-							<div className='col-lg-6'>
-								<Image
+						<div className='row mt-4 justify-content-around'>
+							<div className='col-lg-5 text-center'>
+								<input
+									type='image'
 									src={
-										eventImage.length !== 0
-											? URL.createObjectURL(eventImage)
+										eventImage
+											? eventImage
 											: '/BigThumbnail.svg'
 									}
-									alt='Event thumbnail'
+									alt='Event Image'
 									width={450}
 									height={300}
 								/>
 							</div>
 							<div className='col-lg-6 my-auto'>
-								<div className='justify-content-between d-flex'>
+								<div className='justify-content-between row'>
 									<button
-										className='btn btn-dark px-5 text-uppercase mb-2'
+										className='btn btn-dark col-lg-4 text-uppercase mb-2'
 										onClick={joinButton}>
 										Join Event
 									</button>
+
+									{/* show edit button only if username === host */}
+									{username === host ? (
+										<EditButton
+											title={eventName}
+											setTitle={setEventName}
+											date={eventDate}
+											setDate={setEventDate}
+											location={eventLocation}
+											setLocation={setEventLocation}
+											details={eventDescription}
+											setDetails={setEventDescription}
+											quota={quota}
+											setQuota={setQuota}
+											onSubmit={editButton}
+										/>
+									) : (
+										''
+									)}
+
 									<button
-										className='btn btn-danger px-5 text-uppercase mb-2'
+										className='btn btn-danger col-lg-4 text-uppercase mb-2'
 										onClick={deleteButton}>
 										Delete Event
 									</button>
@@ -272,26 +346,7 @@ export default function EventDetail() {
 							<div className='col-lg-12'>
 								<div className='py-3'>
 									<h6 className='lh-base'>
-										{eventDescription
-											? eventDescription
-											: `Lorem ipsum, dolor sit amet consectetur
-										adipisicing elit. Doloremque consectetur
-										quo error nihil vitae nisi laboriosam!
-										Suscipit facere nemo, ab asperiores in
-										nisi magnam vitae assumenda perspiciatis
-										cupiditate id veritatis? Lorem ipsum
-										dolor sit, amet consectetur adipisicing
-										elit. Explicabo sunt ex quasi! Nisi
-										ipsum iusto inventore minus quod
-										praesentium ad dolorum velit,
-										consectetur nostrum ex officia ab aut.
-										Iste, quam. Lorem ipsum dolor sit amet
-										consectetur adipisicing elit.
-										Dignissimos praesentium temporibus eius
-										modi, quas deleniti repudiandae minus
-										quos tempore repellendus odio? Veritatis
-										quibusdam repellat aliquid, quia unde
-										maxime? Odio, expedita!`}
+										{eventDescription}
 									</h6>
 								</div>
 							</div>
@@ -299,21 +354,23 @@ export default function EventDetail() {
 
 						{/* Fourth row */}
 						<div className='row border-bottom border-dark border-3'>
-							<h5 className='my-2'>Attendees ( 4 / {quota} )</h5>
+							<h5 className='my-2'>
+								Attendees ( {participants.length} / {quota} )
+							</h5>
 						</div>
 						<div className='row justify-content-between'>
-							<div className='col-lg-2 col-auto'>
-								<UserAttend username='User A' wide={200} />
-							</div>
-							<div className='col-lg-2 col-auto'>
-								<UserAttend username='User B' wide={200} />
-							</div>
-							<div className='col-lg-2 col-auto'>
-								<UserAttend username='User C' wide={200} />
-							</div>
-							<div className='col-lg-2 col-auto'>
-								<UserAttend username='User D' wide={200} />
-							</div>
+							{participants.map((member, index) => {
+								return (
+									<div
+										key={index}
+										className='col-lg-2 col-auto'>
+										<UserAttend
+											username={member.user_id}
+											wide={200}
+										/>
+									</div>
+								);
+							})}
 						</div>
 
 						{/* Fifth row */}
@@ -328,6 +385,7 @@ export default function EventDetail() {
 								<textarea
 									className='form-control'
 									placeholder='Write a comment...'
+									value={comment}
 									onChange={(e) => setComment(e.target.value)}
 								/>
 								<button
@@ -338,43 +396,30 @@ export default function EventDetail() {
 								</button>
 							</div>
 						</div>
+						{getComments.map((item, index) => {
+							return (
+								<div
+									key={index}
+									className='row my-auto justify-content-end me-1'>
+									<div className='col-lg-1'>
+										<UserAttend
+											username={item.user_id}
+											wide={100}
+										/>
+									</div>
+									<div
+										className='col-lg-10 border border-2 bg-white py-3 px-4 mb-lg-5'
+										style={{ borderRadius: 1 + 'em' }}>
+										<p style={{ color: '#212840' }}>
+											{item.comment}
+										</p>
+									</div>
+								</div>
+							);
+						})}
 					</div>
 				</main>
 			</Layout>
 		</>
 	);
 }
-
-const UserAttend = ({ username, wide }) => {
-	const userProfile = {
-		1: '/blue.png',
-		2: '/green.png',
-		3: '/orange.png',
-		4: '/pink.png',
-		5: '/cyan.png',
-		6: '/red.png',
-		7: '/yellow.png',
-		8: '/green-old.png',
-		9: '/die.png',
-		10: '/white.png',
-	};
-	const random = Math.floor(Math.random() * 10);
-	return (
-		<>
-			<Image
-				src={
-					userProfile[random]
-						? userProfile[random]
-						: '/user-circle.svg'
-				}
-				alt='User thumbnail'
-				className='rounded-circle'
-				width={wide}
-				height={wide}
-			/>
-			<h6 className='text-center'>{username}</h6>
-		</>
-	);
-};
-
-
