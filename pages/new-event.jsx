@@ -1,50 +1,100 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Image from 'next/image';
 import Layout from '../components/Layout';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
-	const [category, setCategory] = useState([]);
+	const [category, setCategory] = useState(2);
 	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
-	const [eventTime, setEventTime] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
-	const [limitAttendee, setLimitAttendee] = useState(8);
+	const [quota, setQuota] = useState(80);
+	const [username, setUsername] = useState('');
+	const router = useRouter();
+	const [participants, setParticipants] = useState(0);
 
-	const handleSubmit = (e) => {
+	const [imagePreview, setImagePreview] = useState(null);
+
+	useEffect(() => {
+		fetchUser();
+	}, []);
+
+	const fetchUser = async () => {
+		await axios
+			.get('https://haudhi.site/users', {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				},
+			})
+			.then((res) => {
+				setUsername(res.data.data.name);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
+	const onImageUpload = (e) => {
+		const file = e.target.files[0];
+		setEventImage(file);
+
+		setImagePreview(URL.createObjectURL(file));
+	};
+
+	const onSubmit = (e) => {
 		e.preventDefault();
 		if (
-			eventName &&
 			category &&
-			eventImage &&
+			eventName &&
 			eventDate &&
-			eventTime &&
 			eventLocation &&
 			eventDescription &&
-			limitAttendee
+			quota &&
+			eventImage
 		) {
-			console.log('Form Submitted');
+			setCategory([]);
+			setEventName('');
+			setEventDate('');
+			setEventLocation('');
+			setEventDescription('');
+			setQuota(80);
+			setEventImage('');
+
+			const formData = new FormData();
+			formData.append('category_id', category);
+			formData.append('name', eventName);
+			formData.append('host', username);
+			formData.append('date', eventDate + ':00Z');
+			formData.append('location', eventLocation);
+			formData.append('details', eventDescription);
+			formData.append('quota', quota);
+			formData.append('participants', participants);
+			formData.append('image', eventImage);
+
+			axios
+				.post('https://haudhi.site/event', formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization:
+							'Bearer ' + localStorage.getItem('token'),
+					},
+				})
+				.then((res) => {
+					console.log(res);
+					alert(res.data.message);
+					router.push('/new-event');
+				})
+				.catch((err) => {
+					console.log(err);
+					alert(err.response.data.message);
+				});
 		} else {
 			alert('Please fill all the fields');
 		}
-		console.log(
-			eventName,
-			category,
-			eventImage,
-			eventDate,
-			eventTime,
-			eventLocation,
-			eventDescription,
-			limitAttendee
-		);
-		setEventName('');
-		setCategory([]);
-		setEventDate('');
-		setEventTime('');
-		setEventLocation('');
-		setEventDescription('');
-		setLimitAttendee(8);
 	};
 
 	return (
@@ -59,7 +109,7 @@ export default function CreateEvent() {
 				<main>
 					<div className='container'>
 						{/* first row */}
-						<div className='row border-bottom border-3 border-dark mt-5'>
+						<div className='row border-bottom border-3 border-dark mt-5 my-1'>
 							<div className='col-lg-8'>
 								<div className='input-group'>
 									<input
@@ -75,7 +125,7 @@ export default function CreateEvent() {
 									/>
 								</div>
 								<p className='text-muted ms-3 mb-1'>
-									Hosted by: (username)
+									Hosted by : {username}
 								</p>
 							</div>
 							<div className='col-lg-4'>
@@ -84,81 +134,55 @@ export default function CreateEvent() {
 									id='category'
 									onClick={(e) => setCategory(e.target.value)}
 									className='form-select'>
-									<option value='games'>Games</option>
-									<option value='movie'>Movie</option>
-									<option value='sport'>Sport</option>
-									<option value='food'>Food</option>
-									<option value='party'>Party</option>
-									<option value='art'>Art</option>
-									<option value='education'>Education</option>
-									<option value='music'>Music</option>
+									<option defaultValue={0}>
+										Choose a category
+									</option>
+									<option value={1}>Games</option>
+									<option value={2}>Education</option>
+									<option value={3}>Sport</option>
+									<option value={4}>Food</option>
+									<option value={5}>Party</option>
+									<option value={6}>Movie</option>
+									<option value={7}>Music</option>
+									<option value={8}>Art</option>
 								</select>
 							</div>
 						</div>
 
 						{/* second row */}
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-lg-5 mx-auto'>
-								<div className='input-group'>
-									<input
-										type='image'
-										src={
-											eventImage.length !== 0
-												? URL.createObjectURL(
-														eventImage
-												  )
-												: '/BigThumbnail.svg'
-										}
-										alt='event-image'
-										width={450}
-										height={300}
-									/>
-								</div>
-								<div className='input-group'>
-									<input
-										type='file'
-										className='form-control justify-content-center'
-										accept='image/*'
-										onChange={(e) =>
-											setEventImage(e.target.files[0])
-										}
-									/>
-								</div>
+							<div className='col-lg-5 mx-auto my-2'>
+								<Upload
+									img={imagePreview}
+									onChange={(e) => onImageUpload(e)}
+								/>
 							</div>
-							<div className='col-lg-5 mx-auto'>
-								<button
-									className='btn btn-danger text-uppercase my-3 w-100'
-									type='submit'
-									onClick={handleSubmit}>
-									create event
-								</button>
+							<div className='col-lg-5 mx-auto my-auto'>
+								<div className='justify-content-between d-flex'>
+									<button
+										className='btn btn-dark px-5 text-uppercase mb-2'
+										type='submit'
+										onClick={onSubmit}>
+										Create Event
+									</button>
+									<button
+										className='btn btn-danger px-5 text-uppercase mb-2'
+										onClick={() => router.push('/')}>
+										Cancel Event
+									</button>
+								</div>
 								<h5 className='mt-3'>Information :</h5>
 								<div className='border p-3'>
 									<p>Pick a date and time for your event.</p>
 									<div className='input-group my-2'>
 										<input
-											className='form-control'
-											type='date'
-											name=''
+											type='datetime-local'
 											id='event-date'
+											className='form-control'
 											value={eventDate}
 											onChange={(e) =>
 												setEventDate(e.target.value)
 											}
-											placeholder='Event Date'
-										/>
-									</div>
-									<div className='input-group my-2'>
-										<input
-											className='form-control'
-											type='time'
-											name=''
-											id='event-time'
-											value={eventTime}
-											onChange={(e) =>
-												setEventTime(e.target.value)
-											}
-											placeholder='Event Time'
 										/>
 									</div>
 									<input
@@ -197,25 +221,20 @@ export default function CreateEvent() {
 
 						{/* fourth row */}
 						<div className='my-5'>
-							<div className='row border-bottom border-dark border-3'>
+							<div className='row border-bottom border-dark border-3 py-lg-1'>
 								<div className='col-lg-3 align-self-end'>
-									<h5 className='my-2'>
-										Limit the Attendees :
-									</h5>
+									<h5 className=''>Limit the Attendees :</h5>
 								</div>
 								<div className='col-lg-3 mb-2'>
 									<input
 										type='number'
 										className='form-control'
-										value={limitAttendee}
+										value={quota}
 										onChange={(e) =>
-											setLimitAttendee(e.target.value)
+											setQuota(e.target.value)
 										}
 									/>
 								</div>
-							</div>
-							<div className='col-lg-12'>
-								{/* Mapping the attendees */}
 							</div>
 						</div>
 					</div>
@@ -224,3 +243,26 @@ export default function CreateEvent() {
 		</>
 	);
 }
+
+// v2
+const Upload = ({ img, ...rest }) => {
+	return (
+		<div className='input-group'>
+			{img && (
+				<Image
+					className=''
+					src={img}
+					alt='preview'
+					width={450}
+					height={300}
+				/>
+			)}
+			<input
+				className='form-control justify-content-center'
+				type='file'
+				accept='image/*'
+				{...rest}
+			/>
+		</div>
+	);
+};
