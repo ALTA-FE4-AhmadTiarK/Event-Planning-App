@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Layout from '../../components/Layout';
 
-const UserCard = ({ src, username }) => {
+const UserAttend = ({ src, username }) => {
 	return (
 		<>
 			<div className='col-lg-2 col-auto'>
@@ -26,16 +26,20 @@ const joinButton = (e) => {
 	console.log('Join Button Clicked');
 };
 
+const deleteButton = (e) => {
+	e.preventDefault();
+	console.log('Delete Button Clicked');
+};
+
 export default function EventDetail() {
 	const [username, setUsername] = useState('');
 	const [eventName, setEventName] = useState('');
 	const [category, setCategory] = useState([]);
 	const [eventImage, setEventImage] = useState('');
 	const [eventDate, setEventDate] = useState('');
-	const [eventTime, setEventTime] = useState('');
 	const [eventLocation, setEventLocation] = useState('');
 	const [eventDescription, setEventDescription] = useState('');
-	const [limitAttendee, setLimitAttendee] = useState(8);
+	const [quota, setQuota] = useState(8);
 
 	useEffect(() => {
 		fetchEvent();
@@ -46,6 +50,14 @@ export default function EventDetail() {
 			.get(`/api/events/${eventID}`)
 			.then((res) => {
 				console.log(res.data);
+				setUsername(res.data.username);
+				setEventName(res.data.eventName);
+				setCategory(res.data.category);
+				setEventImage(res.data.eventImage);
+				setEventDate(res.data.eventDate);
+				setEventLocation(res.data.eventLocation);
+				setEventDescription(res.data.eventDescription);
+				setQuota(res.data.limitAttendee);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -91,11 +103,18 @@ export default function EventDetail() {
 								/>
 							</div>
 							<div className='col-lg-6 my-auto'>
-								<button
-									className='btn btn-dark px-5 text-uppercase mb-2'
-									onClick={joinButton}>
-									Join Event
-								</button>
+								<div className='justify-content-between d-flex'>
+									<button
+										className='btn btn-dark px-5 text-uppercase mb-2'
+										onClick={joinButton}>
+										Join Event
+									</button>
+									<button
+										className='btn btn-danger px-5 text-uppercase mb-2'
+										onClick={deleteButton}>
+										Delete Event
+									</button>
+								</div>
 								<div
 									className='border border-3 p-5'
 									style={{ borderRadius: 1 + 'em' }}>
@@ -103,10 +122,6 @@ export default function EventDetail() {
 										Monday, November 15
 										{eventDate}
 									</h4>
-									<h6 className='text-muted'>
-										@ 5:00 AM WIB
-										{eventTime}
-									</h6>
 									<br />
 									<h4 className=''>
 										Location : Jakarta
@@ -150,24 +165,22 @@ export default function EventDetail() {
 
 						{/* Fourth row */}
 						<div className='row border-bottom border-dark border-3'>
-							<h5 className='my-2'>
-								Attendees ( 4 / {limitAttendee} )
-							</h5>
+							<h5 className='my-2'>Attendees ( 4 / {quota} )</h5>
 						</div>
 						<div className='row justify-content-between'>
-							<UserCard
+							<UserAttend
 								src='/user-circle.svg'
 								username='User A'
 							/>
-							<UserCard
+							<UserAttend
 								src='/user-circle.svg'
 								username='User B'
 							/>
-							<UserCard
+							<UserAttend
 								src='/user-circle.svg'
 								username='User C'
 							/>
-							<UserCard
+							<UserAttend
 								src='/user-circle.svg'
 								username='User D'
 							/>
