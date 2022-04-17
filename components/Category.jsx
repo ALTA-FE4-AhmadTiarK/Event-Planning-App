@@ -19,7 +19,7 @@ function Category({
 
   return (
     <>
-    <div className="d-flex justify-content-evenly">
+    <div className="d-flex flex-wrap justify-content-evenly">
     <button type="button" className="btn btn-outline-success" onClick={() => setActiveCategory(0)}>All</button>
       <button type="button" className="btn btn-outline-success" onClick={() => setActiveCategory(1)}>Games</button>
       <button type="button" className="btn btn-outline-success" onClick={() => setActiveCategory(2)}>Art</button>
