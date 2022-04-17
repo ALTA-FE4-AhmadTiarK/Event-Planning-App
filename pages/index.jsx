@@ -9,7 +9,7 @@ import Card from '../components/Card';
 export default function Home() {
 	const [isReady, setIsReady] = useState(false);
 	const [dataEvent, setDataEvent] = useState([]);
-	const [dispalyData, setDisplayData] = useState([]);
+	const [displayData, setDisplayData] = useState([]);
 	const [sliceData, setSliceData] = useState(10);
 	const [searchVal, setSearchVal] = useState('');
 	const router = useRouter();
@@ -51,7 +51,7 @@ export default function Home() {
 		let sliced = dataEvent.slice(0, sliceData);
 		result = (
 			<>
-				{dispalyData.map((item, index) => {
+				{displayData.map((item, index) => {
 					return (
 						<Card
 							key={index}
@@ -97,7 +97,6 @@ export default function Home() {
 					<div className='container'>
 						<div className='row'>
 							<div className='col-lg-12 mx-auto'>
-								{/* <div className={styles.box}></div> */}
 								<div className={styles.category}>
 									<ul>
 										<li href=''>GAMES</li>
@@ -112,8 +111,9 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
-						<div className='row border-bottom border-3 border-dark mt-5 mb-3'></div>
-						{result}
+						<div className='row border-bottom border-3 border-dark mt-5 mb-3'>
+							{result}
+						</div>
 					</div>
 				</main>
 			</Layout>
