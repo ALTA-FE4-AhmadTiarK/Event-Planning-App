@@ -71,35 +71,46 @@ export default function EventDetail() {
 
 	const editButton = (e) => {
 		e.preventDefault();
-		const formData = new FormData();
-		formData.append('name', eventName);
-		formData.append('date', eventDate);
-		formData.append('location', eventLocation);
-		formData.append('details', eventDescription);
-		formData.append('quota', quota);
-		const { eventID } = router.query;
-		axios
-			.put(`https://haudhi.site/event/${eventID}`, formData, {
-				headers: {
-					'Content-Type': 'multipart/form-data',
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
-			.then((res) => {
-				console.log(res);
-				if (res.data.status === 'success') {
-					Swal.fire({
-						position: 'center',
-						icon: 'success',
-						title: res.data.message,
-						showConfirmButton: false,
-						timer: 1500,
-					});
-				}
-			})
-			.catch((err) => {
-				console.log(err);
+		if (eventName && eventDate && eventLocation && eventDescription) {
+			const formData = new FormData();
+			formData.append('name', eventName);
+			formData.append('date', eventDate);
+			formData.append('location', eventLocation);
+			formData.append('details', eventDescription);
+			formData.append('quota', quota);
+			const { eventID } = router.query;
+			axios
+				.put(`https://haudhi.site/event/${eventID}`, formData, {
+					headers: {
+						'Content-Type': 'multipart/form-data',
+						Authorization:
+							'Bearer ' + localStorage.getItem('token'),
+					},
+				})
+				.then((res) => {
+					console.log(res);
+					if (res.data.status === 'success') {
+						Swal.fire({
+							position: 'center',
+							icon: 'success',
+							title: res.data.message,
+							showConfirmButton: false,
+							timer: 1500,
+						});
+					}
+				})
+				.catch((err) => {
+					console.log(err);
+				});
+		} else {
+			Swal.fire({
+				position: 'center',
+				icon: 'error',
+				title: 'Please fill all the fields',
+				showConfirmButton: false,
+				timer: 1500,
 			});
+		}
 	};
 
 	const deleteButton = (e) => {
