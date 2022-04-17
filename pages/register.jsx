@@ -79,51 +79,51 @@ export default function Register() {
 			<Layout>
 				<div className='container my-5' style={{ height: 100 + 'vh' }}>
 					<form className='align-items-center overflow-auto'>
-						<div className='form-group d-flex justify-content-between my-3'>
+						<div className='form-group d-flex flex-wrap justify-content-between my-3'>
 							<h6 className='my-auto'>
 								Username <span className='text-danger'>*</span>
 							</h6>
 							<input
 								type='text'
-								className='form-control w-75'
+								className='form-control w-100 my-2'
 								value={username}
 								onChange={(e) => setUsername(e.target.value)}
 								placeholder='Input your username'
 							/>
 						</div>
-						<div className='form-group d-flex justify-content-between my-3'>
+						<div className='form-group d-flex flex-wrap justify-content-between my-3'>
 							<h6 className='my-auto'>
 								Email Address{' '}
 								<span className='text-danger'>*</span>
 							</h6>
 							<input
 								type='email'
-								className='form-control w-75'
+								className='form-control w-100 my-2'
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								placeholder='Input your email'
 							/>
 						</div>
-						<div className='form-group d-flex justify-content-between my-3'>
+						<div className='form-group d-flex flex-wrap justify-content-between my-3'>
 							<h6 className='my-auto'>
 								Password <span className='text-danger'>*</span>
 							</h6>
 							<input
 								type='password'
-								className='form-control w-75'
+								className='form-control w-100 my-2'
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								placeholder='Input your password'
 							/>
 						</div>
-						<div className='form-group d-flex justify-content-between my-3'>
+						<div className='form-group d-flex flex-wrap justify-content-between my-3'>
 							<h6 className='my-auto'>
 								Confirm Password{' '}
 								<span className='text-danger'>*</span>
 							</h6>
 							<input
 								type='password'
-								className='form-control w-75'
+								className='form-control w-100 my-2'
 								value={confirmPassword}
 								onChange={(e) =>
 									setConfirmPassword(e.target.value)
