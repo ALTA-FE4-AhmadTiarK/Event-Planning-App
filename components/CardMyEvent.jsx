@@ -1,16 +1,15 @@
 import React from "react";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
+import styles from '../styles/Home.module.css';
 import moment from 'moment';
 
 
 export default function CardMyEvent({image, onClick, name, date, host, location}) {
   return (
-    <>
-     <div className={styles.cardComponent} onClick={onClick}>
-				<div className='row justify-content-center container'>
-					<div className='col-lg-4 mx-auto'>
+		<>
+			<div className={styles.cardComponent} onClick={onClick}>
+				<div className='row container'>
+					<div className='col-lg-4 text-center mx-auto'>
 						<Image
 							src={image ? image : '/BigThumbnail.svg'}
 							className='border border-1'
@@ -21,7 +20,7 @@ export default function CardMyEvent({image, onClick, name, date, host, location}
 						/>
 					</div>
 
-					<div className='col-lg-8 my-auto'>
+					<div className='col-lg-8 text-lg-start text-center my-auto'>
 						<h5 className=''>
 							{moment(date).format('dddd')},{' '}
 							{moment(date).format('MMMM Do')} @{' '}
@@ -34,6 +33,6 @@ export default function CardMyEvent({image, onClick, name, date, host, location}
 					</div>
 				</div>
 			</div>
-    </>
+		</>
   );
 }

@@ -14,55 +14,37 @@ export default function UserProfile() {
 	const [status, setStatus] = useState('');
 	const [location, setLocation] = useState('');
 	const [interests, setInterests] = useState([]);
-  	const [userId, setUserId] = useState('');
+	const [userId, setUserId] = useState('');
 	const router = useRouter();
 
-	
 	useEffect(() => {
 		setToken(localStorage.getItem('token'));
-		fetchUser({ setUsername });
+		fetchUser({ setUsername, setUserId });
 		userSettings();
 	}, []);
 
-  const fetchUser = async () => {
-    await axios
-      .get('https://haudhi.site/users', {
-        headers: {
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
-        },
-      })
-      .then((res) => {
-        const user = res.data.data;
-        setUserId(user.id)
-        
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const deleteUser = async () => {
-    await axios
-    .delete(`https://haudhi.site/users/${userId}`, {
-      headers: {
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
-      },
-    })
-    .then((res) => {
-      console.log(res.data.data)
-      Swal.fire({
-        title: 'Account successfully delete',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      localStorage.removeItem("token");
+	const deleteUser = async () => {
+		await axios
+			.delete(`https://haudhi.site/users/${userId}`, {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				},
+			})
+			.then((res) => {
+				console.log(res.data.data);
+				Swal.fire({
+					title: 'Account successfully delete',
+					icon: 'success',
+					showConfirmButton: false,
+					timer: 1500,
+				});
+				localStorage.removeItem('token');
 				router.push('/');
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-  } 
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
 
 	const userSettings = async () => {
 		const settings = JSON.parse(localStorage.getItem('user-settings'));
@@ -111,7 +93,7 @@ export default function UserProfile() {
 			confirmButtonText: 'Yes',
 		}).then((result) => {
 			if (result.value) {
-				localStorage.removeItem("token");
+				localStorage.removeItem('token');
 				router.push('/');
 			}
 		});
@@ -193,15 +175,15 @@ export default function UserProfile() {
 								</div>
 							</div>
 						</div>
-						
+
 						<div className='row'>
 							<div className='col-lg-12 mx-auto d-flex justify-content-center mb-5'>
 								<button
 									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
-                  					onClick={() => {
-                    				deleteUser();
-                 					}}>
+									onClick={() => {
+										deleteUser();
+									}}>
 									delete
 								</button>
 								<button

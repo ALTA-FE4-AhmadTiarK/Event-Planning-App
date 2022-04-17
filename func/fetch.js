@@ -1,7 +1,7 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
 
-const fetchUser = async ({ setUsername }) => {
+const fetchUser = async ({ setUsername, setUserId }) => {
 	await axios
 		.get('https://haudhi.site/users', {
 			headers: {
@@ -10,6 +10,7 @@ const fetchUser = async ({ setUsername }) => {
 		})
 		.then((res) => {
 			setUsername(res.data.data.name);
+			setUserId(res.data.data.id);
 		})
 		.catch((err) => {
 			console.log(err);
