@@ -4,8 +4,13 @@ import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 import { useRouter } from 'next/router';
 import { UserAttend } from '../components/Picture';
+<<<<<<< HEAD
+import axios from "axios";
+import { fetchUser } from '../func/fetch';
+=======
 import { fetchUser } from '../func/fetch';
 import axios from "axios";
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
 import Swal from 'sweetalert2';
 
 export default function UserProfile() {
@@ -14,8 +19,19 @@ export default function UserProfile() {
 	const [status, setStatus] = useState('');
 	const [location, setLocation] = useState('');
 	const [interests, setInterests] = useState([]);
+<<<<<<< HEAD
+  const [userId, setUserId] = useState('');
+	const router = useRouter();
+
+	useEffect(() => {
+		setToken(localStorage.getItem('token'));
+		fetchUser({ setUsername });
+		userSettings();
+	}, []);
+=======
 	const router = useRouter();
 	const [userId, setUserId] = useState('');
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
 
 	useEffect(() => {
 		setToken(localStorage.getItem('token'));
@@ -23,7 +39,28 @@ export default function UserProfile() {
 		userSettings();
 	}, []);
 
+<<<<<<< HEAD
+  const fetchUser = async () => {
+    await axios
+      .get('https://haudhi.site/users', {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      })
+      .then((res) => {
+        const user = res.data.data;
+        setUserId(user.id)
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteUser = async () => {
+=======
 const deleteUser = async () => {
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
     await axios
     .delete(`https://haudhi.site/users/${userId}`, {
       headers: {
@@ -32,29 +69,19 @@ const deleteUser = async () => {
     })
     .then((res) => {
       console.log(res.data.data)
+      Swal.fire({
+        title: 'Account successfully delete',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      localStorage.removeItem("token");
+				router.push('/');
     })
     .catch((err) => {
       console.log(err);
     });
   } 
-
-  const myEvent = () => {
-		if (localStorage.getItem('token')) {
-			router.push(`/myevent/`);
-		} else {
-			alert('Please login first');
-			router.push('/login');
-		}
-	};
-  
-  const newEvent = () => {
-		if (localStorage.getItem('token')) {
-			router.push(`/new-event/`);
-		} else {
-			alert('Please login first');
-			router.push('/login');
-		}
-	};
 
 	const userSettings = async () => {
 		const settings = JSON.parse(localStorage.getItem('user-settings'));
@@ -68,6 +95,22 @@ const deleteUser = async () => {
 			setInterests(settings[0].interests);
 		}
 	};
+
+<<<<<<< HEAD
+=======
+	const userSettings = async () => {
+		const settings = JSON.parse(localStorage.getItem('user-settings'));
+		if (settings === null) {
+			setStatus('Not set');
+			setLocation('Not set');
+			setInterests([]);
+		} else {
+			setStatus(settings[0].status);
+			setLocation(settings[0].location);
+			setInterests(settings[0].interests);
+		}
+	};
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		const myProfile = {
@@ -103,7 +146,11 @@ const deleteUser = async () => {
 			confirmButtonText: 'Yes, logout!',
 		}).then((result) => {
 			if (result.value) {
+<<<<<<< HEAD
+				localStorage.removeItem("token");
+=======
 				localStorage.splice(0, 9);
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
 				router.push('/');
 			}
 		});
@@ -224,7 +271,14 @@ const deleteUser = async () => {
 							<div className='col-lg-12 mx-auto d-flex justify-content-center mb-5'>
 								<button
 									className='btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start'
+<<<<<<< HEAD
+									type='submit'
+                  onClick={() => {
+                    deleteUser();
+                  }}>
+=======
 									type='submit'>
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd
 									delete
 								</button>
 								<button
@@ -248,4 +302,8 @@ const deleteUser = async () => {
 			</Layout>
 		</>
 	);
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 71e090ba10aead087040545bead45c273509e4dd

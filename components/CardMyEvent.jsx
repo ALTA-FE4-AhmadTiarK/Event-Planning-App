@@ -11,12 +11,12 @@ export default function CardMyEvent({myevent}) {
         <div className={styles.rowComponent}>
           <div className={styles.imageContainer}>
             <div className={styles.image}>
-            <Image
+            {/* <Image
                   src={myevent.image}
                   alt={myevent.id}
                   width={300}
                   height={200}
-                />
+                /> */}
             </div>
           </div>
           <div className={styles.detailsContainer}>
