@@ -7,7 +7,7 @@ export default function Card(props) {
 	return (
 		<>
 			<div className={styles.cardComponent} onClick={props.onClick}>
-				<div className='row justify-content-center container'>
+				<div className='row justify-content-center container text-center text-lg-start'>
 					<div className='col-lg-4 mx-auto'>
 						<Image
 							src={

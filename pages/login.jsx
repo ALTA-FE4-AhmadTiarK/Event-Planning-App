@@ -61,7 +61,7 @@ export default function Login() {
 			<div
 				className='overflow-auto position-relative'
 				style={{ backgroundColor: '#212840', height: 100 + 'vh' }}>
-				<div className='container text-center position-absolute top-50 start-50 translate-middle w-50'>
+				<div className='container text-center position-absolute top-50 start-50 translate-middle w-100'>
 					<form
 						className='border p-5'
 						style={{

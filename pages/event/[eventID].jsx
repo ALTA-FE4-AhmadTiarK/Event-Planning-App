@@ -350,14 +350,14 @@ export default function EventDetail() {
 								<div
 									key={index}
 									className='row my-auto justify-content-end me-1'>
-									<div className='col-lg-1'>
+									<div className='col-lg-1 col-3'>
 										<UserAttend
 											username={item.user_id}
 											wide={100}
 										/>
 									</div>
 									<div
-										className='col-lg-10 border border-2 bg-white py-3 px-4 mb-lg-5'
+										className='col-lg-10 col-9 border border-2 bg-white py-3 px-4 mb-lg-5'
 										style={{ borderRadius: 1 + 'em' }}>
 										<p style={{ color: '#212840' }}>
 											{item.comment}
