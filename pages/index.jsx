@@ -1,26 +1,24 @@
-import react, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Head from "next/head";
-import Image from "next/image";
-import Layout from "../components/Layout";
-import styles from "../styles/Home.module.css";
-import axios from "axios";
-import Card from "../components/Card";
+import Head from 'next/head';
+import Layout from '../components/Layout';
+import styles from '../styles/Home.module.css';
+import axios from 'axios';
+import Card from '../components/Card';
 
 export default function Home() {
-  const [isReady, setIsReady] = useState(false);
-  const [dataEvent, setDataEvent] = useState([]);
-  const [dispalyData, setDisplayData] = useState([]);
-  const [sliceData, setSliceData] = useState(10);
-  const [searchVal, setSearchVal] = useState("");
-  const router = useRouter();
+	const [isReady, setIsReady] = useState(false);
+	const [dataEvent, setDataEvent] = useState([]);
+	const [dispalyData, setDisplayData] = useState([]);
+	const [sliceData, setSliceData] = useState(10);
+	const [searchVal, setSearchVal] = useState('');
+	const router = useRouter();
 
+	useEffect(() => {
+		fetchEvent();
+	}, []);
 
-  useEffect(() => {
-    fetchEvent();
-  }, []);
-
-  const fetchEvent = async () => {
+	const fetchEvent = async () => {
 		await axios
 			.get(`https://haudhi.site/event`)
 			.then((response) => {
@@ -31,13 +29,13 @@ export default function Home() {
 				console.log(error);
 			})
 			.finally(() => setIsReady(true));
-  };
+	};
 
-  const escapeRegExp = (value) => {
+	const escapeRegExp = (value) => {
 		return value.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-  };
+	};
 
-  const requestSearch = (searchValue) => {
+	const requestSearch = (searchValue) => {
 		const searchRegex = new RegExp(escapeRegExp(searchValue), 'i');
 		const filteredData = dataEvent.filter((row) => {
 			return Object.keys(row).some((field) => {
@@ -46,10 +44,10 @@ export default function Home() {
 		});
 		setDisplayData(filteredData);
 		console.log(filteredData);
-  };
+	};
 
-  let result;
-  if (isReady) {
+	let result;
+	if (isReady) {
 		let sliced = dataEvent.slice(0, sliceData);
 		result = (
 			<>
@@ -82,11 +80,11 @@ export default function Home() {
 				</div>
 			</>
 		);
-  } else {
+	} else {
 		result = 'no data';
-  }
+	}
 
-  return (
+	return (
 		<>
 			<Head>
 				<title>Home Page</title>
@@ -114,15 +112,11 @@ export default function Home() {
 								</div>
 							</div>
 						</div>
-						<div className='row border-bottom border-3 border-dark mt-5 mb-3'>
-							{/* <div className="col-lg-12">
-                <p className="text-muted ms-1 mb-1">Today</p>
-              </div> */}
-						</div>
+						<div className='row border-bottom border-3 border-dark mt-5 mb-3'></div>
 						{result}
 					</div>
 				</main>
 			</Layout>
 		</>
-  );
+	);
 }

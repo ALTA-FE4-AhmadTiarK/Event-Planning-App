@@ -25,10 +25,9 @@ export default function EventDetail() {
 	const [getComments, setGetComments] = useState([]);
 
 	useEffect(() => {
-		if (!router.isReady) return;
 		fetchEvent();
 		fetchUser({ setUsername });
-	}, [router.isReady]);
+	}, []);
 
 	const fetchEvent = async () => {
 		const { eventID } = router.query;
