@@ -5,7 +5,7 @@ import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 import axios from 'axios';
 import Card from '../components/Card';
-import Category from '../components/category';
+import Category from '../components/Category';
 
 export default function Home() {
 	const [isReady, setIsReady] = useState(false);
@@ -27,7 +27,7 @@ export default function Home() {
 			.then((response) => {
 				setDataEvent(response.data.data);
 				setDisplayData(response.data.data.slice(0, 4));
-				setCategory(response.data.data)
+				setCategory(response.data.data);
 			})
 			.catch((error) => {
 				console.log(error);
@@ -47,7 +47,6 @@ export default function Home() {
 			});
 		});
 		setDisplayData(filteredData);
-		console.log(filteredData);
 	};
 
 	let result;
@@ -102,7 +101,12 @@ export default function Home() {
 					<div className='container'>
 						<div className='row'>
 							<div className='col-lg-12 mx-auto my-5'>
-								<Category displayData={displayData} setCategory={setCategory} activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
+								<Category
+									displayData={displayData}
+									setCategory={setCategory}
+									activeCategory={activeCategory}
+									setActiveCategory={setActiveCategory}
+								/>
 							</div>
 						</div>
 						<div className='row border-bottom border-3 border-dark mt-5 mb-3'>
