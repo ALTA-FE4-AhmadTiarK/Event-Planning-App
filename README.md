@@ -39,4 +39,4 @@ Our team consists of 4 people who handle the Front-End and Back-End
 [FIGMA](https://www.figma.com/file/J2oMgwahSybNzycJvlgAA4/Event-Planning-APP)
 
 `DEPLOYMENT`: 
-[VERCEL] (https://event-planning-app.vercel.app/)
+[VERCEL](https://event-planning-app.vercel.app/)
