@@ -5,11 +5,14 @@ import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
 import axios from 'axios';
 import Card from '../components/Card';
+import Category from '../components/category';
 
 export default function Home() {
 	const [isReady, setIsReady] = useState(false);
 	const [dataEvent, setDataEvent] = useState([]);
 	const [displayData, setDisplayData] = useState([]);
+	const [category, setCategory] = useState([]);
+	const [activeCategory, setActiveCategory] = useState(0);
 	const [sliceData, setSliceData] = useState(10);
 	const [searchVal, setSearchVal] = useState('');
 	const router = useRouter();
@@ -24,6 +27,7 @@ export default function Home() {
 			.then((response) => {
 				setDataEvent(response.data.data);
 				setDisplayData(response.data.data.slice(0, 4));
+				setCategory(response.data.data)
 			})
 			.catch((error) => {
 				console.log(error);
@@ -51,7 +55,7 @@ export default function Home() {
 		let sliced = dataEvent.slice(0, sliceData);
 		result = (
 			<>
-				{displayData.map((item, index) => {
+				{category.map((item, index) => {
 					return (
 						<Card
 							key={index}
@@ -60,6 +64,7 @@ export default function Home() {
 							name={item.name}
 							host={item.host}
 							date={item.date}
+							category={item.category_id}
 							location={item.location}
 							onClick={() => {
 								router.push(`/event/${item.id}`);
@@ -96,19 +101,8 @@ export default function Home() {
 				<main>
 					<div className='container'>
 						<div className='row'>
-							<div className='col-lg-12 mx-auto'>
-								<div className={styles.category}>
-									<ul>
-										<li href=''>GAMES</li>
-										<li href=''>MOVIE</li>
-										<li href=''>SPORT</li>
-										<li href=''>ART</li>
-										<li href=''>FOOD</li>
-										<li href=''>EDUCATION</li>
-										<li href=''>PARTY</li>
-										<li href=''>MUSIC</li>
-									</ul>
-								</div>
+							<div className='col-lg-12 mx-auto my-5'>
+								<Category displayData={displayData} setCategory={setCategory} activeCategory={activeCategory} setActiveCategory={setActiveCategory} />
 							</div>
 						</div>
 						<div className='row border-bottom border-3 border-dark mt-5 mb-3'>

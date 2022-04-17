@@ -1,35 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import Head from "next/head";
-import Layout from "../components/Layout";
+import Layout from '../../components/Layout';
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import CardMyEvent from "../components/CardMyEvent";
 import axios from 'axios';
-import { fetchUser } from '../func/fetch';
+import { fetchUser } from '../../func/fetch';
 import { useRouter } from 'next/router';
+import CardMyEvent from '../../components/CardMyEvent';
 
 export default function MyEvent() {
-  const [username, setUsername] = useState('');
-  const [dispalyData, setDisplayData] = useState([]);
+  //const [username, setUsername] = useState('');
+  const [displayedData, setDisplayedData] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
-		if (!router.isReady) return;
-		fetchEvent();
-		fetchUser({ setUsername });
-	}, [router.isReady]);
+	    fetchEvent();
+		
+	}, []);
   
 
   const fetchEvent = async () => {
-    const { userID } = router.query;
+    //const { userID } = router.query;
     await axios
-      .get(`https://haudhi.site/event/participations/user/${userID}`,{
+      .get(`https://haudhi.site/event/user/`,{
         headers: {
           Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
       })
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.data);
+        setDisplayedData(response.data.data);
       })
       .catch((error) => {
         console.log(error);
@@ -50,11 +49,25 @@ export default function MyEvent() {
             <div className="row border-bottom border-3 border-dark mt-5">
               <div className="col-lg-12">
                 <h2>My Event</h2>
-                <p className="text-muted ms-1 mb-1 mt-5">Today</p>
+                </div>
               </div>
-              </div>
-             
-            <CardMyEvent/>
+              {displayedData.map((item, index) => {
+					return (
+						<CardMyEvent
+							key={index}
+							id={item.id}
+							image={item.image}
+							name={item.name}
+							host={item.host}
+							date={item.date}
+							location={item.location}
+                            onClick={() => {
+								router.push(`/event/${item.id}`);
+							}}
+							
+						/>
+					);
+				})}
           </div>
         </main>
       </Layout>

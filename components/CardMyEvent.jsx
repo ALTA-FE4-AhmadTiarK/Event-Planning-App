@@ -2,32 +2,38 @@ import React from "react";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import Link from "next/link";
+import moment from 'moment';
 
 
-export default function CardMyEvent({myevent}) {
+export default function CardMyEvent({image, onClick, name, date, host, location}) {
   return (
     <>
-      <div className={styles.cardComponent} onClick={myevent.onClick}>
-        <div className={styles.rowComponent}>
-          <div className={styles.imageContainer}>
-            <div className={styles.image}>
-            {/* <Image
-                  src={myevent.image}
-                  alt={myevent.id}
-                  width={300}
-                  height={200}
-                /> */}
-            </div>
-          </div>
-          <div className={styles.detailsContainer}>
-            <div className={styles.contentComponent}>
-              <p>{myevent.date}</p>
-               <h3>{myevent.name}</h3>
-              <p className="text-muted ms-1 mb-1">Hosted by {myevent.host} - {myevent.location}</p>
-            </div>
-          </div>
-        </div>
-      </div>
+     <div className={styles.cardComponent} onClick={onClick}>
+				<div className='row justify-content-center container'>
+					<div className='col-lg-4 mx-auto'>
+						<Image
+							src={image ? image : '/BigThumbnail.svg'}
+							className='border border-1'
+							style={{ borderRadius: 1 + 'em' }}
+							alt={name}
+							width={300}
+							height={200}
+						/>
+					</div>
+
+					<div className='col-lg-8 my-auto'>
+						<h5 className=''>
+							{moment(date).format('dddd')},{' '}
+							{moment(date).format('MMMM Do')} @{' '}
+							{moment(date).format('LT')} WIB
+						</h5>
+						<h3>{name}</h3>
+						<p className='text-muted'>
+							Hosted by {host} - {location}
+						</p>
+					</div>
+				</div>
+			</div>
     </>
   );
 }

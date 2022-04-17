@@ -13,7 +13,7 @@ export default function Card({ image, onClick, name, date, host, location }) {
 							src={image ? image : '/BigThumbnail.svg'}
 							className='border border-1'
 							style={{ borderRadius: 1 + 'em' }}
-							alt={props.id}
+							alt={name}
 							width={300}
 							height={200}
 						/>
