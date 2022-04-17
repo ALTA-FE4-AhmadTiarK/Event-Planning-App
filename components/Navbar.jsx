@@ -2,7 +2,6 @@ import React from 'react';
 import Image from 'next/image';
 import MyLink from './Link';
 import { useRouter } from 'next/router';
-import Swal from 'sweetalert2';
 
 export default function Navbar(props) {
 	const router = useRouter();
@@ -11,16 +10,8 @@ export default function Navbar(props) {
 		if (localStorage.getItem('token')) {
 			router.push('/userprofile');
 		} else {
-			Swal.fire({
-				title: 'Please login first',
-				icon: 'warning',
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Login',
-			}).then((result) => {
-				if (result.value) {
-					router.push('/login');
-				}
-			});
+			alert('Please login first');
+			router.push('/login');
 		}
 	};
 
@@ -28,16 +19,8 @@ export default function Navbar(props) {
 		if (localStorage.getItem('token')) {
 			router.push('/myevent');
 		} else {
-			Swal.fire({
-				title: 'Please login first',
-				icon: 'warning',
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Login',
-			}).then((result) => {
-				if (result.value) {
-					router.push('/login');
-				}
-			});
+			alert('Please login first');
+			router.push('/login');
 		}
 	};
 
@@ -55,7 +38,7 @@ export default function Navbar(props) {
 					<input
 						type='text'
 						className='form-control'
-						placeholder='Input Event Name, Keywords or Location'
+						placeholder='Input Event Name, Category, or Location'
 						onChange={props.onChange}
 					/>
 				</form>
