@@ -7,6 +7,7 @@ export default function Card(props) {
 	return (
 		<>
 			<div className={styles.cardComponent} onClick={props.onClick}>
+
 				<div className='row justify-content-center'>
 					<div className='col-lg-4 mx-auto'>
 						<Image
@@ -20,6 +21,7 @@ export default function Card(props) {
 							height={200}
 						/>
 					</div>
+
 					<div className='col-lg-8 my-auto'>
 						<h5 className=''>
 							{moment(props.date).format('dddd')},{' '}

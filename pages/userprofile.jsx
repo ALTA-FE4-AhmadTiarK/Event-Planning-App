@@ -5,6 +5,7 @@ import styles from '../styles/Home.module.css';
 import { useRouter } from 'next/router';
 import { UserAttend } from '../components/Picture';
 import { fetchUser } from '../func/fetch';
+import axios from "axios";
 import Swal from 'sweetalert2';
 
 export default function UserProfile() {
@@ -14,12 +15,46 @@ export default function UserProfile() {
 	const [location, setLocation] = useState('');
 	const [interests, setInterests] = useState([]);
 	const router = useRouter();
+	const [userId, setUserId] = useState('');
 
 	useEffect(() => {
 		setToken(localStorage.getItem('token'));
 		fetchUser({ setUsername });
 		userSettings();
 	}, []);
+
+const deleteUser = async () => {
+    await axios
+    .delete(`https://haudhi.site/users/${userId}`, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    })
+    .then((res) => {
+      console.log(res.data.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  } 
+
+  const myEvent = () => {
+		if (localStorage.getItem('token')) {
+			router.push(`/myevent/`);
+		} else {
+			alert('Please login first');
+			router.push('/login');
+		}
+	};
+  
+  const newEvent = () => {
+		if (localStorage.getItem('token')) {
+			router.push(`/new-event/`);
+		} else {
+			alert('Please login first');
+			router.push('/login');
+		}
+	};
 
 	const userSettings = async () => {
 		const settings = JSON.parse(localStorage.getItem('user-settings'));
@@ -33,7 +68,6 @@ export default function UserProfile() {
 			setInterests(settings[0].interests);
 		}
 	};
-
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		const myProfile = {

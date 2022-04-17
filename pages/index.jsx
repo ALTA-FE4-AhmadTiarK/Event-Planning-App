@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Layout from '../components/Layout';
 import styles from '../styles/Home.module.css';
