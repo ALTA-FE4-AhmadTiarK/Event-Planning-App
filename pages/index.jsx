@@ -50,6 +50,7 @@ export default function Home() {
 
   let result;
   if (isReady) {
+
 		let sliced = dataEvent.slice(0, sliceData);
 		result = (
 			<>
@@ -124,5 +125,6 @@ export default function Home() {
 				</main>
 			</Layout>
 		</>
+
   );
 }
