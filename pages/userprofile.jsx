@@ -30,26 +30,42 @@ export default function UserProfile() {
 	}, []);
 
 	const deleteUser = async () => {
-		await axios
-			.delete(`https://haudhi.site/users/${userId}`, {
-				headers: {
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
-			.then((res) => {
-				console.log(res.data.data);
-				Swal.fire({
-					title: 'Account successfully delete',
-					icon: 'success',
-					showConfirmButton: false,
-					timer: 1500,
-				});
-				localStorage.removeItem('token');
-				router.push('/');
-			})
-			.catch((err) => {
-				console.log(err);
-			});
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes',
+		}).then((result) => {
+			if (result.value) {
+				axios
+					.delete(`https://haudhi.site/users/${userId}`, {
+						headers: {
+							Authorization:
+								'Bearer ' + localStorage.getItem('token'),
+						},
+					})
+					.then((res) => {
+						console.log(res);
+						if (res.data.status === 'success') {
+							Swal.fire({
+								position: 'center',
+								icon: 'success',
+								title: res.data.message,
+								showConfirmButton: false,
+								timer: 1500,
+							});
+							localStorage.removeItem('token');
+							router.push('/');
+						}
+					})
+					.catch((err) => {
+						console.log(err);
+					});
+			}
+		});
 	};
 
 	const userSettings = async () => {
@@ -91,12 +107,12 @@ export default function UserProfile() {
 	const logOut = () => {
 		Swal.fire({
 			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
+			text: 'You want to log out?',
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, logout!',
+			confirmButtonText: 'Yes',
 		}).then((result) => {
 			if (result.value) {
 				localStorage.splice(0, 9);
@@ -108,8 +124,8 @@ export default function UserProfile() {
 	return (
 		<>
 			<Head>
-				<title>Create New Event</title>
-				<meta name='new-event' content='User Profile' />
+				<title>User Profile</title>
+				<meta name='user-profile-page' content='User Profile' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Layout>

@@ -307,7 +307,7 @@ export default function EventDetail() {
 								Attendees ( {participants.length} / {quota} )
 							</h5>
 						</div>
-						<div className='row justify-content-between'>
+						<div className='row'>
 							{participants.map((member, index) => {
 								return (
 									<div
@@ -339,7 +339,7 @@ export default function EventDetail() {
 								/>
 								<button
 									type='submit'
-									className='btn btn-dark'
+									className='btn btn-dark my-1'
 									onClick={commentButton}>
 									Comment
 								</button>
