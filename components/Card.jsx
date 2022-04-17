@@ -1,7 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import Link from "next/link";
+import styles from '../styles/Home.module.css';
 import moment from 'moment';
 
 export default function Card(props) {
@@ -14,7 +13,6 @@ export default function Card(props) {
 				<div className='row justify-content-center'>
 					<div className='col-lg-4 mx-auto'>
 						<Image
-							// src={'/BigThumbnail.svg'}
 							src={
 								props.image ? props.image : '/BigThumbnail.svg'
 							}
@@ -29,9 +27,9 @@ export default function Card(props) {
 					{/* </div> */}
 					{/* <div className={styles.detailsContainer}>
             <div className={styles.contentComponent}> */}
+					{/* <p>{props.date}</p> */}
+					{/* <p>{moment(props.date).format('dddd')},</p> */}
 					<div className='col-lg-8 my-auto'>
-						{/* <p>{props.date}</p> */}
-						{/* <p>{moment(props.date).format('dddd')},</p> */}
 						<h5 className=''>
 							{moment(props.date).format('dddd')},{' '}
 							{moment(props.date).format('MMMM Do')} @{' '}
