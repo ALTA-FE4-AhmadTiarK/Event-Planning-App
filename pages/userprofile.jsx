@@ -3,15 +3,67 @@ import Head from "next/head";
 import Layout from "../components/Layout";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { useRouter } from "next/router";
+import { useRouter } from 'next/router';
+import axios from "axios";
+
 
 export default function UserProfile() {
-  const [token, setToken] = useState("");
+  const [userId, setUserId] = useState('');
   const router = useRouter();
 
   useEffect(() => {
-    setToken(localStorage.getItem("token"));
-  }, []);
+		fetchUser();
+	}, []);
+
+  const fetchUser = async () => {
+    await axios
+      .get('https://haudhi.site/users', {
+        headers: {
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+      })
+      .then((res) => {
+        const user = res.data.data;
+        setUserId(user.id)
+        
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+  
+  const deleteUser = async () => {
+    await axios
+    .delete(`https://haudhi.site/users/${userId}`, {
+      headers: {
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    })
+    .then((res) => {
+      console.log(res.data.data)
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  } 
+
+  const myEvent = () => {
+		if (localStorage.getItem('token')) {
+			router.push(`/myevent/`);
+		} else {
+			alert('Please login first');
+			router.push('/login');
+		}
+	};
+  
+  const newEvent = () => {
+		if (localStorage.getItem('token')) {
+			router.push(`/new-event/`);
+		} else {
+			alert('Please login first');
+			router.push('/login');
+		}
+	};
 
   const logOut = () => {
     localStorage.removeItem("token");
@@ -41,12 +93,14 @@ export default function UserProfile() {
                 <button
                   className="btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start"
                   type="submit"
+                  onClick={myEvent}
                 >
                   my event
                 </button>
                 <button
                   className="btn btn-lg btn-danger text-uppercase my-3 mx-3 float-end"
                   type="submit"
+                  onClick={newEvent}
                 >
                   create new
                 </button>
@@ -110,6 +164,7 @@ export default function UserProfile() {
                 <button
                   className="btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start"
                   type="submit"
+                  onClick={deleteUser}
                 >
                   delete
                 </button>

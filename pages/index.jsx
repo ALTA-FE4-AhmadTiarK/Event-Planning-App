@@ -65,6 +65,7 @@ export default function Home() {
               location={item.location}
               onClick={() => {
                 router.push(`/event/${item.ID}`);
+                
               }}
             />
           );
@@ -118,9 +119,6 @@ export default function Home() {
               </div>
             </div>
             <div className="row border-bottom border-3 border-dark mt-5 mb-3">
-              <div className="col-lg-12">
-                <p className="text-muted ms-1 mb-1">Today</p>
-              </div>
             </div>
             {result}
           </div>
