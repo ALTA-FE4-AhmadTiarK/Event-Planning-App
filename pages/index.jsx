@@ -13,6 +13,8 @@ export default function Home() {
   const [dispalyData, setDisplayData] = useState([]);
   const [sliceData, setSliceData] = useState(10);
   const [searchVal, setSearchVal] = useState("");
+  const router = useRouter();
+
 
   useEffect(() => {
     fetchEvent();
@@ -55,12 +57,15 @@ export default function Home() {
           return (
             <Card
               key={index}
-              id={item.id}
+              id={item.ID}
               image={item.image}
               name={item.name}
               host={item.host}
               date={item.date}
               location={item.location}
+              onClick={() => {
+                router.push(`/event/${item.ID}`);
+              }}
             />
           );
         })}

@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Card(props) {
   return (
     <>
-      <div className={styles.cardComponent}>
+      <div className={styles.cardComponent} onClick={props.onClick}>
         <div className={styles.rowComponent}>
           <div className={styles.imageContainer}>
             <div className={styles.image}>
@@ -22,7 +22,7 @@ export default function Card(props) {
           <div className={styles.detailsContainer}>
             <div className={styles.contentComponent}>
               <p>{props.date}</p>
-              <h3>{props.name}</h3>
+               <h3>{props.name}</h3>
               <p className="text-muted ms-1 mb-1">Hosted by {props.host} - {props.location}</p>
             </div>
           </div>

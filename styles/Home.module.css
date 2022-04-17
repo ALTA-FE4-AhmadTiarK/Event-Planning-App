@@ -125,16 +125,15 @@
   padding: 10px;
 }
 
-
-
 .category ul {
   margin-top: 10vh;
   list-style: none;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   border: 1px solid #000;
   border-radius: 25px;
   padding: 0rem;
+  flex-wrap: wrap;
 }
 
 .category ul li {
