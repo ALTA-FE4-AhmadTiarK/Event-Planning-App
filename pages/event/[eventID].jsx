@@ -7,6 +7,7 @@ import { UserAttend } from '../../components/Picture';
 import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
+import { fetchUser, participate } from '../../func/fetch';
 
 export default function EventDetail() {
 	const router = useRouter();
@@ -26,7 +27,7 @@ export default function EventDetail() {
 	useEffect(() => {
 		if (!router.isReady) return;
 		fetchEvent();
-		fetchUser();
+		fetchUser({ setUsername });
 	}, [router.isReady]);
 
 	const fetchEvent = async () => {
@@ -51,58 +52,10 @@ export default function EventDetail() {
 			});
 	};
 
-	const fetchUser = async () => {
-		await axios
-			.get('https://haudhi.site/users', {
-				headers: {
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
-			.then((res) => {
-				setUsername(res.data.data.name);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
-
 	const joinButton = (e) => {
 		e.preventDefault();
 		if (participants.length <= quota) {
-			axios
-				.post(
-					`https://haudhi.site/event/participations`,
-					{ event_id: eventId },
-					{
-						headers: {
-							'Content-Type': 'application/json',
-							Authorization:
-								'Bearer ' + localStorage.getItem('token'),
-						},
-					}
-				)
-				.then((res) => {
-					console.log(res);
-					if (res.data.status === 'success') {
-						Swal.fire({
-							position: 'center',
-							icon: 'success',
-							title: res.data.message,
-							showConfirmButton: false,
-							timer: 1500,
-						});
-					}
-					router.reload();
-				})
-				.catch((err) => {
-					Swal.fire({
-						position: 'center',
-						icon: 'error',
-						title: err.response.data.message,
-						showConfirmButton: false,
-						timer: 1500,
-					});
-				});
+			participate({ event_id: eventId, eventId, router });
 		} else {
 			Swal.fire({
 				position: 'center',
@@ -122,7 +75,6 @@ export default function EventDetail() {
 		formData.append('location', eventLocation);
 		formData.append('details', eventDescription);
 		formData.append('quota', quota);
-
 		const { eventID } = router.query;
 		axios
 			.put(`https://haudhi.site/event/${eventID}`, formData, {
@@ -214,10 +166,7 @@ export default function EventDetail() {
 			axios
 				.post(
 					`https://haudhi.site/event/comments`,
-					{
-						event_id: eventId,
-						comment: comment,
-					},
+					{ event_id: eventId, comment: comment },
 					{
 						headers: {
 							'Content-Type': 'application/json',
@@ -295,7 +244,6 @@ export default function EventDetail() {
 										onClick={joinButton}>
 										Join Event
 									</button>
-
 									{/* show edit button only if username === host */}
 									{username === host ? (
 										<EditButton
