@@ -1,4 +1,5 @@
 import { EditModal } from './Modal';
+import Image from 'next/image';
 
 function EditButton({
 	title,
@@ -45,4 +46,26 @@ function EditButton({
 	);
 }
 
-export { EditButton };
+const Upload = ({ img, ...rest }) => {
+	return (
+		<div className='input-group'>
+			{img && (
+				<Image
+					className=''
+					src={img}
+					alt='preview'
+					width={450}
+					height={300}
+				/>
+			)}
+			<input
+				className='form-control justify-content-center'
+				type='file'
+				accept='image/*'
+				{...rest}
+			/>
+		</div>
+	);
+};
+
+export { EditButton, Upload };
