@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 
 export default function Navbar(props) {
 	const router = useRouter();
-
 	const isLogin = () => {
 		if (localStorage.getItem('token')) {
 			router.push('/userprofile');

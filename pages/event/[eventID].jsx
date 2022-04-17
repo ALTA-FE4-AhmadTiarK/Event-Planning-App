@@ -46,6 +46,7 @@ export default function EventDetail() {
 				setEventId(event.ID);
 				setParticipants(event.attendees);
 				setGetComments(event.comment);
+				console.log(event);
 			})
 			.catch((err) => {
 				console.log(err);
