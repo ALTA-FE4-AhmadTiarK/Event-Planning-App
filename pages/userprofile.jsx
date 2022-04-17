@@ -132,11 +132,11 @@ export default function UserProfile() {
 				<main>
 					<div className='container'>
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-lg-4 mx-auto'>
+							<div className='col-lg-4 col-6 mx-auto'>
 								<UserAttend wide={400} username={username} />
 							</div>
 							<div className='col-lg-6 mx-auto my-5'>
-								<div className='justify-content-lg-between row'>
+								<div className='justify-content-lg-between row my-2'>
 									<button
 										className='btn btn-danger text-uppercase col-6'
 										onClick={() => {
@@ -154,7 +154,6 @@ export default function UserProfile() {
 										create new
 									</button>
 								</div>
-								{/* <div className={styles.user}> */}
 								<div className='col-12 mx-auto'>
 									<div className='my-lg-3'>
 										<label className='form-label mx-0'>
@@ -196,7 +195,6 @@ export default function UserProfile() {
 										/>
 									</div>
 								</div>
-								{/* </div> */}
 							</div>
 						</div>
 						<div className='row'>
@@ -204,38 +202,23 @@ export default function UserProfile() {
 								<p className='ms-1 mb-2 text-capitalize'>
 									Interest
 								</p>
-								<div className={styles.interestContainer}>
-									<div className={styles.interestBox}>
-										<p>GAMES</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>MOVIE</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>SPORT</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>FOOD</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>PARTY</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>ART</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>EDUCATION</p>
-									</div>
-									<div className={styles.interestBox}>
-										<p>MUSIC</p>
-									</div>
+								<div className='row container'>
+									<InterestList like='Games' />
+									<InterestList like='Music' />
+									<InterestList like='Travel' />
+									<InterestList like='Sport' />
+									<InterestList like='Food' />
+									<InterestList like='Movie' />
+									<InterestList like='Reading' />
+									<InterestList like='Fashion' />
+									<InterestList like='Others' />
 								</div>
 							</div>
 						</div>
-						<div className='row'>
-							<div className='col-lg-12 mx-auto d-flex justify-content-center mb-5'>
+						<div className='container-fluid'>
+							<div className='row mx-auto justify-content-center'>
 								<button
-									className='btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
 									onClick={() => {
 										deleteUser();
@@ -243,13 +226,13 @@ export default function UserProfile() {
 									delete
 								</button>
 								<button
-									className='btn btn-lg btn-primary text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-primary text-uppercase col-3 m-2'
 									onClick={handleUpdate}
 									type='submit'>
 									update
 								</button>
 								<button
-									className='btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
 									onClick={() => {
 										logOut();
@@ -264,3 +247,11 @@ export default function UserProfile() {
 		</>
 	);
 }
+
+const InterestList = ({ like }) => {
+	return (
+		<div className='rounded-pill border col text-center m-2'>
+			<p className='my-auto'>{like}</p>
+		</div>
+	);
+};
