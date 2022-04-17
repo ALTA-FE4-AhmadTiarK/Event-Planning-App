@@ -24,7 +24,7 @@ Our team consists of 4 people who handle the Front-End and Back-End
 - [x]  User can UPDATE their Profile
 - [ ]  User can DELETE their Account
 - [x]  Registered User can LOGIN
-- [ ]  All User can READ list of Events
+- [x]  All User can READ list of Events
 - [x]  Registered User can CREATE new Events
 - [x]  Registered User can EDIT their Events
 - [x]  Registered User can DELETE their Events
@@ -35,5 +35,8 @@ Our team consists of 4 people who handle the Front-End and Back-End
 
 ## Documentation
 
-`FIGMA :`
-[Prototype](https://www.figma.com/file/J2oMgwahSybNzycJvlgAA4/Event-Planning-APP)
+`PROTOTYPE`: 
+[FIGMA](https://www.figma.com/file/J2oMgwahSybNzycJvlgAA4/Event-Planning-APP)
+
+`DEPLOYMENT`: 
+[VERCEL] (https://event-planning-app.vercel.app/)
