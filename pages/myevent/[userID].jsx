@@ -55,7 +55,7 @@ export default function MyEvent() {
 									date={item.date}
 									location={item.location}
 									onClick={() => {
-										router.push(`/event/${item.id}`);
+										router.push(`/event/${item.ID}`);
 									}}
 								/>
 							);

@@ -10,8 +10,7 @@ const fetchUser = async ({ setUsername, setUserId }) => {
 		})
 		.then((res) => {
 			setUsername(res.data.data.name);
-			const user = res.data.data;
-			setUserId(user.id);
+			setUserId(res.data.data.id);
 		})
 		.catch((err) => {
 			console.log(err);
