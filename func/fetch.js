@@ -46,8 +46,8 @@ const participate = ({ event_id, eventId, router }) => {
 			Swal.fire({
 				position: 'center',
 				icon: 'error',
-				// title: err.response.data.message,
-				title: 'You must be logged in to participate',
+				title: err.response.data.message,
+				// title: 'You must be logged in to participate',
 				showConfirmButton: true,
 			}).then(() => {
 				router.push('/login');

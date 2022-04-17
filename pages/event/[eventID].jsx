@@ -25,9 +25,10 @@ export default function EventDetail() {
 	const [getComments, setGetComments] = useState([]);
 
 	useEffect(() => {
+		if (!router.isReady) return;
 		fetchEvent();
 		fetchUser({ setUsername });
-	}, []);
+	}, [router.isReady]);
 
 	const fetchEvent = async () => {
 		const { eventID } = router.query;
@@ -42,9 +43,10 @@ export default function EventDetail() {
 				setEventDescription(event.details);
 				setEventImage(event.image);
 				setQuota(event.quota);
-				setEventId(event.id);
+				setEventId(event.ID);
 				setParticipants(event.attendees);
 				setGetComments(event.comment);
+				console.log(event);
 			})
 			.catch((err) => {
 				console.log(err);
