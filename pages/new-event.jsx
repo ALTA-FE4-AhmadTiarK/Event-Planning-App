@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
-import Image from 'next/image';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
+import { Upload } from '../components/Button';
+import { fetchUser } from '../func/fetch';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
@@ -16,32 +18,15 @@ export default function CreateEvent() {
 	const [username, setUsername] = useState('');
 	const router = useRouter();
 	const [participants, setParticipants] = useState(0);
-
 	const [imagePreview, setImagePreview] = useState(null);
 
 	useEffect(() => {
-		fetchUser();
+		fetchUser({ setUsername });
 	}, []);
-
-	const fetchUser = async () => {
-		await axios
-			.get('https://haudhi.site/users', {
-				headers: {
-					Authorization: 'Bearer ' + localStorage.getItem('token'),
-				},
-			})
-			.then((res) => {
-				setUsername(res.data.data.name);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
 
 	const onImageUpload = (e) => {
 		const file = e.target.files[0];
 		setEventImage(file);
-
 		setImagePreview(URL.createObjectURL(file));
 	};
 
@@ -77,8 +62,16 @@ export default function CreateEvent() {
 				})
 				.then((res) => {
 					console.log(res);
-					alert(res.data.message);
-					router.push('/new-event');
+					Swal.fire({
+						title: 'Success',
+						text: res.data.message,
+						icon: 'success',
+						confirmButtonText: 'Ok',
+					}).then((result) => {
+						if (result.value) {
+							router.push('/');
+						}
+					});
 				})
 				.then(() => {
 					setCategory([]);
@@ -91,10 +84,20 @@ export default function CreateEvent() {
 				})
 				.catch((err) => {
 					console.log(err);
-					alert(err.response.data.message);
+					Swal.fire({
+						title: 'Error',
+						text: err.response.data.message,
+						icon: 'error',
+						confirmButtonText: 'Ok',
+					});
 				});
 		} else {
-			alert('Please fill all the fields');
+			Swal.fire({
+				title: 'Error',
+				text: 'Please fill all the fields',
+				icon: 'error',
+				confirmButtonText: 'Ok',
+			});
 		}
 	};
 
@@ -173,17 +176,15 @@ export default function CreateEvent() {
 								<h5 className='mt-3'>Information :</h5>
 								<div className='border p-3'>
 									<p>Pick a date and time for your event.</p>
-									<div className='input-group my-2'>
-										<input
-											type='datetime-local'
-											id='event-date'
-											className='form-control'
-											value={eventDate}
-											onChange={(e) =>
-												setEventDate(e.target.value)
-											}
-										/>
-									</div>
+									<input
+										type='datetime-local'
+										id='event-date'
+										className='form-control'
+										value={eventDate}
+										onChange={(e) =>
+											setEventDate(e.target.value)
+										}
+									/>
 									<input
 										type='text'
 										className='form-control'
@@ -242,26 +243,3 @@ export default function CreateEvent() {
 		</>
 	);
 }
-
-// v2
-const Upload = ({ img, ...rest }) => {
-	return (
-		<div className='input-group'>
-			{img && (
-				<Image
-					className=''
-					src={img}
-					alt='preview'
-					width={450}
-					height={300}
-				/>
-			)}
-			<input
-				className='form-control justify-content-center'
-				type='file'
-				accept='image/*'
-				{...rest}
-			/>
-		</div>
-	);
-};
