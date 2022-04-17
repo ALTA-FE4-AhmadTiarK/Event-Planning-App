@@ -3,6 +3,7 @@ import Head from 'next/head';
 import MyLink from '../components/Link';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 
 export default function Login() {
 	const [email, setEmail] = useState('');
@@ -12,7 +13,11 @@ export default function Login() {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (email === '' || password === '') {
-			alert('Please fill all the fields');
+			Swal.fire({
+				icon: 'error',
+				title: 'Oops...',
+				text: 'Please fill all the fields',
+			});
 			return;
 		}
 
@@ -23,7 +28,12 @@ export default function Login() {
 			})
 			.then((res) => {
 				let token = res.data.data.token;
-				alert(res.data.message);
+				Swal.fire({
+					icon: 'success',
+					title: res.data.message,
+					showConfirmButton: false,
+					timer: 1500,
+				});
 				if (token) {
 					localStorage.setItem('token', token);
 					if (res.data.status === 'success') {
@@ -32,7 +42,12 @@ export default function Login() {
 				}
 			})
 			.catch((err) => {
-				alert(err.response.data.message);
+				Swal.fire({
+					icon: 'error',
+					title: err.response.data.message,
+					showConfirmButton: false,
+					timer: 1500,
+				});
 			});
 	};
 
