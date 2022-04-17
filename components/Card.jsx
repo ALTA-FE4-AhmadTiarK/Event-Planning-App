@@ -7,9 +7,6 @@ export default function Card(props) {
 	return (
 		<>
 			<div className={styles.cardComponent} onClick={props.onClick}>
-				{/* <div className={styles.rowComponent}> */}
-				{/* <div className={styles.imageContainer}> */}
-				{/* <div className={styles.image}> */}
 				<div className='row justify-content-center'>
 					<div className='col-lg-4 mx-auto'>
 						<Image
@@ -23,12 +20,6 @@ export default function Card(props) {
 							height={200}
 						/>
 					</div>
-					{/* </div> */}
-					{/* </div> */}
-					{/* <div className={styles.detailsContainer}>
-            <div className={styles.contentComponent}> */}
-					{/* <p>{props.date}</p> */}
-					{/* <p>{moment(props.date).format('dddd')},</p> */}
 					<div className='col-lg-8 my-auto'>
 						<h5 className=''>
 							{moment(props.date).format('dddd')},{' '}
@@ -41,9 +32,6 @@ export default function Card(props) {
 						</p>
 					</div>
 				</div>
-				{/* </div> */}
-				{/* </div> */}
-				{/* </div> */}
 			</div>
 		</>
 	);
