@@ -3,7 +3,7 @@ import Image from 'next/image';
 import MyLink from './Link';
 import { useRouter } from 'next/router';
 
-export default function Navbar() {
+export default function Navbar(props) {
 	const router = useRouter();
 
 	const isLogin = () => {
@@ -17,7 +17,7 @@ export default function Navbar() {
 
 	const myEvent = () => {
 		if (localStorage.getItem('token')) {
-			router.push('/my-event');
+			router.push('/myevent');
 		} else {
 			alert('Please login first');
 			router.push('/login');
@@ -39,6 +39,7 @@ export default function Navbar() {
 						type='text'
 						className='form-control'
 						placeholder='Input Event Name, Category, or Location'
+						onChange={props.onChange}
 					/>
 				</form>
 				<div className='navbar-brand'>

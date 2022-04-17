@@ -108,6 +108,25 @@
   margin-left: 0.5rem;
 }
 
+.cardComponent {
+  background-color: #F6F7FF;
+  padding: 15px;
+  border-radius: 5px;
+  min-height: 150px;
+}
+
+.rowComponent {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.detailsContainer {
+  flex: 2;
+  padding: 10px;
+}
+
+
+
 .category ul {
   margin-top: 10vh;
   list-style: none;
@@ -145,6 +164,13 @@
   display: flex;
   justify-content: center;
   margin-left: 15px;
+}
+
+.viewMore {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 3rem;
 }
 
 
