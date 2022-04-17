@@ -34,36 +34,39 @@ export default function MyEvent() {
   };
   
   return (
-    <>
-      <Head>
-        <title>Home Page</title>
-        <meta name="login" content="My Event" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+		<>
+			<Head>
+				<title>My Event</title>
+				<meta name='login' content='My Event' />
 
-      <Layout>
-        <main>
-          <div className="container">
-            <div className="row border-bottom border-3 border-dark mt-5">
-              <div className="col-lg-12">
-                <h2>My Event</h2>
-                <p className="text-muted ms-1 mb-1 mt-5">Today</p>
-              </div>
-              </div>
-              {dispalyData.map((myevent) => {
-          return (
-            <CardMyEvent
-              key={myevent.id}
-              myevent={myevent}
-              onClick={() => {
-                router.push(`/event/${myevent.ID}`);
-              }}
-            />
-          );
-        })}
-          </div>
-        </main>
-      </Layout>
-    </>
+				<link rel='icon' href='/favicon.ico' />
+			</Head>
+
+			<Layout>
+				<main>
+					<div className='container'>
+						<div className='row border-bottom border-3 border-dark mt-5'>
+							<div className='col-lg-12'>
+								<h2>My Event</h2>
+								<p className='text-muted ms-1 mb-1 mt-5'>
+									Today
+								</p>
+							</div>
+						</div>
+						{dispalyData.map((myevent) => {
+							return (
+								<CardMyEvent
+									key={myevent.id}
+									myevent={myevent}
+									onClick={() => {
+										router.push(`/event/${myevent.ID}`);
+									}}
+								/>
+							);
+						})}
+					</div>
+				</main>
+			</Layout>
+		</>
   );
 }

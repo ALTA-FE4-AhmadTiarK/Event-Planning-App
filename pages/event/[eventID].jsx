@@ -8,6 +8,7 @@ import axios from 'axios';
 import moment from 'moment';
 import Swal from 'sweetalert2';
 import { fetchUser, participate } from '../../func/fetch';
+import Image from 'next/image';
 
 export default function EventDetail() {
 	const router = useRouter();
@@ -226,8 +227,7 @@ export default function EventDetail() {
 						{/* Second row */}
 						<div className='row mt-4 justify-content-around'>
 							<div className='col-lg-5 text-center'>
-								<input
-									type='image'
+								<Image
 									src={
 										eventImage
 											? eventImage
@@ -271,7 +271,7 @@ export default function EventDetail() {
 									</button>
 								</div>
 								<div
-									className='border border-3 p-5'
+									className='border border-3 p-lg-5 p-3'
 									style={{ borderRadius: 1 + 'em' }}>
 									<h4 className=''>
 										{moment(eventDate).format('dddd')},{' '}
@@ -312,7 +312,7 @@ export default function EventDetail() {
 								return (
 									<div
 										key={index}
-										className='col-lg-2 col-auto'>
+										className='col-lg-2 col-auto mx-auto'>
 										<UserAttend
 											username={member.user_id}
 											wide={200}
@@ -357,7 +357,7 @@ export default function EventDetail() {
 										/>
 									</div>
 									<div
-										className='col-lg-10 col-9 border border-2 bg-white py-3 px-4 mb-lg-5'
+										className='col-lg-10 col-9 border border-2 bg-white py-3 px-4 mb-lg-5 my-auto'
 										style={{ borderRadius: 1 + 'em' }}>
 										<p style={{ color: '#212840' }}>
 											{item.comment}
