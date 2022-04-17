@@ -42,16 +42,28 @@ const participate = ({ event_id, eventId, router }) => {
 			router.reload();
 		})
 		.catch((err) => {
-			console.log(err);
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: err.response.data.message,
-				// title: 'You must be logged in to participate',
-				showConfirmButton: true,
-			}).then(() => {
-				router.push('/login');
-			});
+			console.log(err.response.data.message);
+			if (err.response.data.message === 'invalid or expired jwt') {
+				Swal.fire({
+					position: 'center',
+					icon: 'error',
+					title: 'Please login to participate',
+					showConfirmButton: false,
+					timer: 1500,
+				}).then(() => {
+					router.push('/login');
+				});
+			} else {
+				Swal.fire({
+					position: 'center',
+					icon: 'error',
+					title: err.response.data.message,
+					showConfirmButton: false,
+					timer: 1500,
+				}).then(() => {
+					router.push('/');
+				});
+			}
 		});
 };
 
@@ -63,7 +75,6 @@ const editButton = ({
 	eventDescription,
 	quota,
 }) => {
-	// e.preventDefault();
 	const formData = new FormData();
 	formData.append('name', eventName);
 	formData.append('date', eventDate);

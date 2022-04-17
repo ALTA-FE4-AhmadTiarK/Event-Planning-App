@@ -69,9 +69,9 @@ export default function Navbar(props) {
 		<nav
 			className='navbar navbar-expand-lg'
 			style={{ backgroundColor: '#212840' }}>
-			<div className='container justify-content-between d-flex'>
+			<div className='container justify-content-lg-between justify-content-center d-flex'>
 				<MyLink href='/'>
-					<h3 className='text-white navbar-brand fw-bold m-0'>
+					<h3 className='text-white navbar-brand fw-bold m-0 py-2'>
 						Event Planner
 					</h3>
 				</MyLink>

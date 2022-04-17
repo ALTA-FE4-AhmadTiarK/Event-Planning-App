@@ -76,7 +76,6 @@ export default function UserProfile() {
 			setInterests(settings[0].interests);
 		}
 	};
-
 	const handleUpdate = async (e) => {
 		e.preventDefault();
 		const myProfile = {
@@ -104,12 +103,12 @@ export default function UserProfile() {
 	const logOut = () => {
 		Swal.fire({
 			title: 'Are you sure?',
-			text: "You won't be able to revert this!",
+			text: 'You want to log out?',
 			icon: 'warning',
 			showCancelButton: true,
 			confirmButtonColor: '#3085d6',
 			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes, logout!',
+			confirmButtonText: 'Yes',
 		}).then((result) => {
 			if (result.value) {
 				localStorage.removeItem("token");
@@ -121,19 +120,19 @@ export default function UserProfile() {
 	return (
 		<>
 			<Head>
-				<title>Create New Event</title>
-				<meta name='new-event' content='User Profile' />
+				<title>User Profile</title>
+				<meta name='user-profile-page' content='User Profile' />
 				<link rel='icon' href='/favicon.ico' />
 			</Head>
 			<Layout>
 				<main>
 					<div className='container'>
 						<div className='row mt-4 justify-content-between'>
-							<div className='col-lg-4 mx-auto'>
+							<div className='col-lg-4 col-6 mx-auto'>
 								<UserAttend wide={400} username={username} />
 							</div>
 							<div className='col-lg-6 mx-auto my-5'>
-								<div className='justify-content-lg-between row'>
+								<div className='justify-content-lg-between row my-2'>
 									<button
 										className='btn btn-danger text-uppercase col-6'
 										onClick={() => {
@@ -151,7 +150,6 @@ export default function UserProfile() {
 										create new
 									</button>
 								</div>
-								{/* <div className={styles.user}> */}
 								<div className='col-12 mx-auto'>
 									<div className='my-lg-3'>
 										<label className='form-label mx-0'>
@@ -193,14 +191,13 @@ export default function UserProfile() {
 										/>
 									</div>
 								</div>
-								{/* </div> */}
 							</div>
 						</div>
 						
 						<div className='row'>
 							<div className='col-lg-12 mx-auto d-flex justify-content-center mb-5'>
 								<button
-									className='btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
                   					onClick={() => {
                     				deleteUser();
@@ -208,13 +205,13 @@ export default function UserProfile() {
 									delete
 								</button>
 								<button
-									className='btn btn-lg btn-primary text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-primary text-uppercase col-3 m-2'
 									onClick={handleUpdate}
 									type='submit'>
 									update
 								</button>
 								<button
-									className='btn btn-lg btn-danger text-uppercase my-3 mx-3 float-start'
+									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
 									onClick={() => {
 										logOut();
