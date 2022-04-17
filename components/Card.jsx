@@ -16,7 +16,7 @@ export default function Card(props) {
 							}
 							className='border border-1'
 							style={{ borderRadius: 1 + 'em' }}
-							alt='Picture of the author'
+							alt={props.id}
 							width={300}
 							height={200}
 						/>
