@@ -43,7 +43,7 @@ export default function EventDetail() {
 				setEventDescription(event.details);
 				setEventImage(event.image);
 				setQuota(event.quota);
-				setEventId(event.ID);
+				setEventId(event.id);
 				setParticipants(event.attendees);
 				setGetComments(event.comment);
 			})
