@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import { errorMessage, pleaseLogin, successMessage } from './alert';
 
 const fetchUser = async ({ setUsername, setUserId }) => {
@@ -38,19 +37,10 @@ const participate = ({ event_id, eventId, router }) => {
 			router.reload();
 		})
 		.catch((err) => {
-			console.log(err.response.data.message);
 			if (err.response.data.message === 'invalid or expired jwt') {
 				pleaseLogin(router);
 			} else {
-				Swal.fire({
-					position: 'center',
-					icon: 'error',
-					title: err.response.data.message,
-					showConfirmButton: false,
-					timer: 1500,
-				}).then(() => {
-					router.push('/');
-				});
+				errorMessage(err);
 			}
 		});
 };
@@ -78,19 +68,12 @@ const editButton = ({
 			},
 		})
 		.then((res) => {
-			console.log(res);
 			if (res.data.status === 'success') {
-				Swal.fire({
-					position: 'center',
-					icon: 'success',
-					title: res.data.message,
-					showConfirmButton: false,
-					timer: 1500,
-				});
+				successMessage(res);
 			}
 		})
 		.catch((err) => {
-			console.log(err);
+			errorMessage(err);
 		});
 };
 

@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Swal from 'sweetalert2';
 import { Upload } from '../components/Button';
 import { fetchUser } from '../func/fetch';
+import { errorMessage, fillAll, successConfirm } from '../func/alert';
 
 export default function CreateEvent() {
 	const [eventName, setEventName] = useState('');
@@ -61,17 +61,7 @@ export default function CreateEvent() {
 					},
 				})
 				.then((res) => {
-					console.log(res);
-					Swal.fire({
-						title: 'Success',
-						text: res.data.message,
-						icon: 'success',
-						confirmButtonText: 'Ok',
-					}).then((result) => {
-						if (result.value) {
-							router.push('/');
-						}
-					});
+					successConfirm({ res, router });
 				})
 				.then(() => {
 					setCategory([]);
@@ -83,21 +73,10 @@ export default function CreateEvent() {
 					setEventImage('');
 				})
 				.catch((err) => {
-					console.log(err);
-					Swal.fire({
-						title: 'Error',
-						text: err.response.data.message,
-						icon: 'error',
-						confirmButtonText: 'Ok',
-					});
+					errorMessage(err);
 				});
 		} else {
-			Swal.fire({
-				title: 'Error',
-				text: 'Please fill all the fields',
-				icon: 'error',
-				confirmButtonText: 'Ok',
-			});
+			fillAll();
 		}
 	};
 
