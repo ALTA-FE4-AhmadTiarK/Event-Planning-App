@@ -3,6 +3,7 @@ import Image from 'next/image';
 import MyLink from './Link';
 import { useRouter } from 'next/router';
 import { pleaseLogin } from '../func/alert';
+import { fetchUser } from '../func/fetch';
 
 export default function Navbar(props) {
 	const router = useRouter();
@@ -18,7 +19,8 @@ export default function Navbar(props) {
 
 	const myEvent = () => {
 		if (localStorage.getItem('token')) {
-			router.push(`/myevent/${userId}`);
+			const id = fetchUser({ setUserId });
+			router.push(`/myevent/${id}`);
 		} else {
 			pleaseLogin(router);
 		}
