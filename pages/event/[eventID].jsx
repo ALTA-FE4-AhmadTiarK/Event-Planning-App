@@ -6,9 +6,17 @@ import { EditButton } from '../../components/Button';
 import { UserAttend } from '../../components/Picture';
 import axios from 'axios';
 import moment from 'moment';
-import Swal from 'sweetalert2';
 import { fetchUser, participate } from '../../func/fetch';
 import Image from 'next/image';
+import {
+	emptyComment,
+	errorMessage,
+	fillAll,
+	loginAlert,
+	notHost,
+	quotaFull,
+	successMessage,
+} from '../../func/alert';
 
 export default function EventDetail() {
 	const router = useRouter();
@@ -49,7 +57,7 @@ export default function EventDetail() {
 				setGetComments(event.comment);
 			})
 			.catch((err) => {
-				console.log(err);
+				errorMessage(err);
 			});
 	};
 
@@ -58,13 +66,7 @@ export default function EventDetail() {
 		if (participants.length <= quota) {
 			participate({ event_id: eventId, eventId, router });
 		} else {
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: 'Quota is full',
-				showConfirmButton: false,
-				timer: 1500,
-			});
+			quotaFull();
 		}
 	};
 
@@ -89,26 +91,14 @@ export default function EventDetail() {
 				.then((res) => {
 					console.log(res);
 					if (res.data.status === 'success') {
-						Swal.fire({
-							position: 'center',
-							icon: 'success',
-							title: res.data.message,
-							showConfirmButton: false,
-							timer: 1500,
-						});
+						successMessage(res);
 					}
 				})
 				.catch((err) => {
-					console.log(err);
+					errorMessage(err);
 				});
 		} else {
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: 'Please fill all the fields',
-				showConfirmButton: false,
-				timer: 1500,
-			});
+			fillAll();
 		}
 	};
 
@@ -124,55 +114,24 @@ export default function EventDetail() {
 					},
 				})
 				.then((res) => {
-					console.log(res);
 					if (res.data.status === 'success') {
-						Swal.fire({
-							position: 'center',
-							icon: 'success',
-							title: res.data.message,
-							showConfirmButton: false,
-							timer: 1500,
-						});
+						successMessage(res);
 						router.push('/');
 					}
 				})
 				.catch((err) => {
-					Swal.fire({
-						position: 'center',
-						icon: 'error',
-						title: err.response.data.message,
-						showConfirmButton: false,
-						timer: 1500,
-					});
+					errorMessage(err);
 				});
 		} else {
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: 'You are not the host of this event',
-				showConfirmButton: false,
-				timer: 1500,
-			});
+			notHost();
 		}
 	};
 
 	const commentButton = (e) => {
 		if (localStorage.getItem('token') === null) {
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: 'You must be logged in to make a comment',
-				showConfirmButton: false,
-				timer: 1500,
-			});
+			loginAlert();
 		} else if (comment === '') {
-			Swal.fire({
-				position: 'center',
-				icon: 'error',
-				title: 'Comment cannot be empty',
-				showConfirmButton: false,
-				timer: 1500,
-			});
+			emptyComment();
 		} else {
 			e.preventDefault();
 			axios
@@ -188,27 +147,13 @@ export default function EventDetail() {
 					}
 				)
 				.then((res) => {
-					console.log(res);
 					if (res.data.status === 'success') {
-						Swal.fire({
-							position: 'center',
-							icon: 'success',
-							title: res.data.message,
-							showConfirmButton: false,
-							timer: 1500,
-						});
+						successMessage(res);
 					}
 					router.reload();
 				})
 				.catch((err) => {
-					console.log(err);
-					Swal.fire({
-						position: 'center',
-						icon: 'error',
-						title: err.response.data.message,
-						showConfirmButton: false,
-						timer: 1500,
-					});
+					errorMessage(err);
 				});
 			setComment('');
 		}
@@ -255,8 +200,8 @@ export default function EventDetail() {
 										onClick={joinButton}>
 										Join Event
 									</button>
-									{/* show edit button only if username === host */}
-									{username === host ? (
+									{/* show button only if username === host */}
+									{username && host === username && (
 										<EditButton
 											title={eventName}
 											setTitle={setEventName}
@@ -270,15 +215,15 @@ export default function EventDetail() {
 											setQuota={setQuota}
 											onSubmit={editButton}
 										/>
-									) : (
-										''
 									)}
 
-									<button
-										className='btn btn-danger col-lg-4 text-uppercase mb-2'
-										onClick={deleteButton}>
-										Delete Event
-									</button>
+									{username && host === username && (
+										<button
+											className='btn btn-danger col-lg-4 text-uppercase mb-2'
+											onClick={deleteButton}>
+											Delete Event
+										</button>
+									)}
 								</div>
 								<div
 									className='border border-3 p-lg-5 p-3'
