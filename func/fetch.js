@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { errorMessage, pleaseLogin, successMessage } from './alert';
 
 const fetchUser = async ({ setUsername, setUserId }) => {
 	await axios
@@ -32,28 +33,14 @@ const participate = ({ event_id, eventId, router }) => {
 		.then((res) => {
 			console.log(res);
 			if (res.data.status === 'success') {
-				Swal.fire({
-					position: 'center',
-					icon: 'success',
-					title: res.data.message,
-					showConfirmButton: false,
-					timer: 1500,
-				});
+				successMessage(res);
 			}
 			router.reload();
 		})
 		.catch((err) => {
 			console.log(err.response.data.message);
 			if (err.response.data.message === 'invalid or expired jwt') {
-				Swal.fire({
-					position: 'center',
-					icon: 'error',
-					title: 'Please login to participate',
-					showConfirmButton: false,
-					timer: 1500,
-				}).then(() => {
-					router.push('/login');
-				});
+				pleaseLogin(router);
 			} else {
 				Swal.fire({
 					position: 'center',

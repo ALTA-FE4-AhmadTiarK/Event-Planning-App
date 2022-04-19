@@ -1,5 +1,17 @@
 import Swal from 'sweetalert2';
 
+function pleaseLogin(router) {
+	Swal.fire({
+		title: 'Please login first',
+		icon: 'warning',
+		confirmButtonColor: '#3085d6',
+		confirmButtonText: 'Login',
+	}).then((result) => {
+		if (result.value) {
+			router.push('/login');
+		}
+	});
+}
 function loginAlert() {
 	Swal.fire({
 		position: 'center',
@@ -71,6 +83,7 @@ function notHost() {
 }
 
 export {
+	pleaseLogin,
 	emptyComment,
 	successMessage,
 	errorMessage,
