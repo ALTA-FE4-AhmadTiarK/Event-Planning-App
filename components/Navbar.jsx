@@ -2,49 +2,38 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import MyLink from './Link';
 import { useRouter } from 'next/router';
-import Swal from 'sweetalert2';
 import axios from 'axios';
+import { errorMessage, pleaseLogin } from '../func/alert';
 
 export default function Navbar(props) {
 	const router = useRouter();
 	const [userId, setUserId] = useState([]);
 
-
 	useEffect(() => {
 		fetchUser();
-	}, [])
-	
+	}, []);
+
 	const fetchUser = async () => {
 		await axios
-		  .get('https://haudhi.site/users', {
-			headers: {
-			  Authorization: 'Bearer ' + localStorage.getItem('token'),
-			},
-		  })
-		  .then((res) => {
-			const user = res.data.data;
-			setUserId(user.id)
-			
-		  })
-		  .catch((err) => {
-			console.log(err);
-		  });
-	  };
+			.get('https://haudhi.site/users', {
+				headers: {
+					Authorization: 'Bearer ' + localStorage.getItem('token'),
+				},
+			})
+			.then((res) => {
+				const user = res.data.data;
+				setUserId(user.id);
+			})
+			.catch((err) => {
+				errorMessage(err);
+			});
+	};
 
 	const isLogin = () => {
 		if (localStorage.getItem('token')) {
 			router.push('/userprofile');
 		} else {
-			Swal.fire({
-				title: 'Please login first',
-				icon: 'warning',
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Login',
-			}).then((result) => {
-				if (result.value) {
-					router.push('/login');
-				}
-			});
+			pleaseLogin(router);
 		}
 	};
 
@@ -52,16 +41,7 @@ export default function Navbar(props) {
 		if (localStorage.getItem('token')) {
 			router.push(`/myevent/${userId}`);
 		} else {
-			Swal.fire({
-				title: 'Please login first',
-				icon: 'warning',
-				confirmButtonColor: '#3085d6',
-				confirmButtonText: 'Login',
-			}).then((result) => {
-				if (result.value) {
-					router.push('/login');
-				}
-			});
+			pleaseLogin(router);
 		}
 	};
 
