@@ -4,7 +4,13 @@ import Layout from '../components/Layout';
 import MyLink from '../components/Link';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import Swal from 'sweetalert2';
+import {
+	errorMessage,
+	fillAll,
+	matchPassword,
+	pass8char,
+	successMessage,
+} from '../func/alert';
 
 export default function Register() {
 	const [username, setUsername] = useState('');
@@ -21,25 +27,13 @@ export default function Register() {
 			password === '' ||
 			confirmPassword === ''
 		) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Please fill all the fields',
-			});
+			fillAll();
 			return;
 		} else if (password.length < 8) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Password must be at least 8 characters',
-			});
+			pass8char();
 			return;
 		} else if (confirmPassword !== password) {
-			Swal.fire({
-				icon: 'error',
-				title: 'Oops...',
-				text: 'Password does not match',
-			});
+			matchPassword();
 			return;
 		}
 		await axios
@@ -49,23 +43,13 @@ export default function Register() {
 				password: password,
 			})
 			.then((res) => {
-				Swal.fire({
-					icon: 'success',
-					title: res.data.message,
-					showConfirmButton: false,
-					timer: 1500,
-				});
+				successMessage(res);
 				if (res.data.status === 'success') {
 					router.push('/login');
 				}
 			})
 			.catch((err) => {
-				Swal.fire({
-					icon: 'error',
-					title: err.response.data.message,
-					showConfirmButton: false,
-					timer: 1500,
-				});
+				errorMessage(err);
 			});
 	};
 

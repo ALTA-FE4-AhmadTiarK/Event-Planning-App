@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Layout from '../components/Layout';
-import styles from '../styles/Home.module.css';
 import { useRouter } from 'next/router';
 import { UserAttend } from '../components/Picture';
-import axios from "axios";
+import axios from 'axios';
 import { fetchUser } from '../func/fetch';
-import Swal from 'sweetalert2';
+import {
+	deleteAccount,
+	errorMessage,
+	logout,
+	profileUpdated,
+} from '../func/alert';
 
 export default function UserProfile() {
 	const [token, setToken] = useState('');
@@ -31,18 +35,12 @@ export default function UserProfile() {
 				},
 			})
 			.then((res) => {
-				console.log(res.data.data);
-				Swal.fire({
-					title: 'Account successfully delete',
-					icon: 'success',
-					showConfirmButton: false,
-					timer: 1500,
-				});
+				deleteAccount(res);
 				localStorage.removeItem('token');
 				router.push('/');
 			})
 			.catch((err) => {
-				console.log(err);
+				errorMessage(err);
 			});
 	};
 
@@ -74,29 +72,7 @@ export default function UserProfile() {
 			getLocal.unshift(myProfile);
 			localStorage.setItem('user-settings', JSON.stringify(getLocal));
 		}
-		Swal.fire({
-			title: 'Profile updated successfully',
-			icon: 'success',
-			showConfirmButton: false,
-			timer: 1500,
-		});
-	};
-
-	const logOut = () => {
-		Swal.fire({
-			title: 'Are you sure?',
-			text: 'You want to log out?',
-			icon: 'warning',
-			showCancelButton: true,
-			confirmButtonColor: '#3085d6',
-			cancelButtonColor: '#d33',
-			confirmButtonText: 'Yes',
-		}).then((result) => {
-			if (result.value) {
-				localStorage.removeItem('token');
-				router.push('/');
-			}
-		});
+		profileUpdated();
 	};
 
 	return (
@@ -196,7 +172,7 @@ export default function UserProfile() {
 									className='btn btn-lg btn-danger text-uppercase col-3 m-2'
 									type='submit'
 									onClick={() => {
-										logOut();
+										logout(router);
 									}}>
 									logout
 								</button>
