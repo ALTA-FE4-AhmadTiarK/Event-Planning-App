@@ -23,7 +23,7 @@ export default function MyEvent() {
         },
       })
       .then((response) => {
-        setDisplayedData(response.data.data);
+        setDisplayedData(response.data);
       })
       .catch((error) => {
         console.log(error);

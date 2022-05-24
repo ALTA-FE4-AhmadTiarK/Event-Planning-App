@@ -27,9 +27,9 @@ export default function Home() {
     await axios
       .get(`${API}/event`)
       .then((response) => {
-        setDataEvent(response.data.data);
-        setDisplayData(response.data.data.slice(0, 4));
-        setCategory(response.data.data);
+        setDataEvent(response.data);
+        setDisplayData(response.data.slice(0, 4));
+        setCategory(response.data);
       })
       .catch((error) => {
         alert(error);
